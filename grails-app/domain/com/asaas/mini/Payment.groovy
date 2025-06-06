@@ -4,9 +4,9 @@ class Payment {
 
     Customer customer
     Payer payer
-    String paymentType
+    PaymentType paymentType
     Double value
-    String status
+    StatusType status
     Date dueDate
     Date dateReceived
 
@@ -18,6 +18,7 @@ class Payment {
     }
 
     static mapping = {
-        
+        paymentType enumType: 'string'
+        status enumType: 'string'
     }
 }
