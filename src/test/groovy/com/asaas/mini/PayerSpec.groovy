@@ -11,8 +11,4 @@ class PayerSpec extends Specification implements DomainUnitTest<Payer> {
     def cleanup() {
     }
 
-    void "test something"() {
-        expect:"fix me"
-            true == false
-    }
 }
