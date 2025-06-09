@@ -2,18 +2,9 @@ package com.asaas.mini
 
 import com.asaas.mini.utils.BaseEntity
 
-class Payer extends BaseEntity {
+class Payer extends BasePersonalData {
 
     Customer customer
-    String name
-    String email
-    String phone
-    String cpfCnpj
-    String state
-    String city
-    String street
-    Integer number
-    String postalCode
 
     static constraints = {
         customer nullable: false
