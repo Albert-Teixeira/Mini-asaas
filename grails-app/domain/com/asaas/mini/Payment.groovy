@@ -11,9 +11,7 @@ class Payment {
     Date dateReceived
 
     static constraints = {
-        paymentType blank: false
-        value blank: false, min: 0F
-        status blank: false
+        value min: 0.0D
         dateReceived nullable: true
     }
 
