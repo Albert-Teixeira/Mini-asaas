@@ -1,6 +1,8 @@
 package com.asaas.mini
 
-class Payment {
+import com.asaas.mini.utils.BaseEntity
+
+class Payment extends BaseEntity{
 
     Customer customer
     Payer payer
