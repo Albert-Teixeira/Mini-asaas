@@ -1,6 +1,6 @@
 package com.asaas.mini
 
-import com.asaas.mini.utils.BaseEntity
+import com.asaas.mini.utils.BasePersonalData
 
 class Customer extends BasePersonalData {
 
