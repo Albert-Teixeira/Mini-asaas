@@ -102,8 +102,14 @@ class PaymentController {
 
     }
 
-    def delete() {
-        
+    def remove() {
+        def payment = Payment.findById(params.id)
+        if(!payment.delete()){
+            render "falha ao remover pagamento"
+        }
+        else{
+            render "pagamento deletado"
+        }
     }
 
 }
