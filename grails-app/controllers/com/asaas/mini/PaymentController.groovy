@@ -98,18 +98,31 @@ class PaymentController {
         // render p
     }
 
-    def edit(Payment payment) {
-
+    def edit() {
+        def payment = Payment.get(params.id)
+        try {
+            payment.properties = params
+            payment.save()
+        } catch (Exception e) {
+            println(e.getMessage())
+            render "nao foi"
+            return false
+        }
+        render "foi!"
+        return true
     }
 
     def remove() {
-        def payment = Payment.findById(params.id)
-        if(!payment.delete()){
-            render "falha ao remover pagamento"
+        def payment = Payment.get(params.id)
+        try {
+            payment.delete()
+        } catch (Exception e) {
+            println(e.getMessage())
+            render "nao foi"
+            return false
         }
-        else{
-            render "pagamento deletado"
-        }
+        render "foi!"
+        return true
     }
 
 }
