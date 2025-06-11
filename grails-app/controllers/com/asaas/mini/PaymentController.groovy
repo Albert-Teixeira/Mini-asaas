@@ -1,132 +1,86 @@
 package com.asaas.mini
 
-import grails.gorm.transactions.Transactional
+import grails.converters.JSON
 
 class PaymentController {
 
+    PaymentService paymentService
+
     def index() {
-        
-        for (payment in Payment.getAll()) {
-            render "payment: "
-            
-            render payment.customer
-            render payment.payer
-            render payment.paymentType
-            render payment.value
-            render payment.status
-            render payment.dueDate
-            render payment.dateReceived
-        }
+        def payments = paymentService.getPayments()
+
+        render(payments as JSON)
     }
 
     def show() {
         if(!params.id){
-            render "missing parameter id"
+            render([error: "missing parameter id"] as JSON)
             return
         }
 
-        def payment = Payment.get(params.id)
+        def payment = paymentService.getPaymentById(params.id)
 
         if(!payment){
-            render "not found"
+            render([error: "not found"] as JSON)
             return
         }
 
-        render payment.customer
-        render payment.payer
-        render payment.paymentType
-        render payment.value
-        render payment.status
-        render payment.dueDate
-        render payment.dateReceived
+        render(payment as JSON)
     }
 
     def create() {
-        // def customer = new Customer(
-        //     name: "name",
-        //     email: "email@email.com",
-        //     phoneNumber: "15999999999",
-        //     cpfCnpj: "123.456.789-09",
-        //     state: "SP",
-        //     city: "Boituva",
-        //     street: "Pq. Ecologico",
-        //     houseNumber: 123,
-        //     postalCode: "15123-456")
-        
-        // if(!customer.save()){
-        //     render "falha no customer "
-        // }
+        def customer = params.customer
+        def payer = params.payer
+        def paymentType = params.payment_type
+        def value = params.value
+        def dueDate = params.due_date
 
-        // def payer = new Payer(
-        //     customer: customer,
-        //     name: "name2",
-        //     email: "email2@email.com",
-        //     phoneNumber: "15999999999",
-        //     cpfCnpj: "123.456.789-09",
-        //     state: "SP",
-        //     city: "Boituva",
-        //     street: "Pq. Ecologico",
-        //     houseNumber: 123,
-        //     postalCode: "15123-456")
-        
-        // if(!payer.save()){
-        //     render "falha no payer "
-        // }
-        
-        // def payment = new Payment(
-        //     customer: customer,
-        //     payer: payer,
-        //     paymentType: PaymentType.BOLETO,
-        //     value: 45.55,
-        //     status: StatusType.PENDENTE,
-        //     dueDate: new Date(),
-        //     dateReceived: new Date())
-        
-        // if(!payment.save()){
-        //     render "falha no payment "
-        // }
-        // else{
-        //     render "td certo :-) "
-        // }
+        if(!customer || !payer || !paymentType || !value || !dueDate){
+            def errorMessage = "missing parameters: "
+            if(!customer) errorMessage += "customer "
+            if(!payer) errorMessage += "payer "
+            if(!paymentType) errorMessage += "payment_type "
+            if(!value) errorMessage += "value "
+            if(!dueDate) errorMessage += "due_date"
+            render([error: errorMessage] as JSON)
+        }
 
-        // render payment
+        def payment = paymentService.createPayment(customer, payer, paymentType, value, dueDate)
 
-        // def p = new Payment()
-        // if (!p.save()) {
-        //     p.errors.allErrors.each {
-        //         println it
-        //     }
-        // }
-        // render p
+        if(!payment){
+            render([error: "payment can't be created"] as JSON)
+        }
+
+        render(payment as JSON)
     }
 
-    @Transactional
     def edit() {
-        def payment = Payment.get(params.id)
-        try {
-            payment.properties = params
-            payment.save()
-        } catch (Exception e) {
-            println(e.getMessage())
-            render "nao foi"
-            return false
+        if(!params.id){
+            render([error: "missing parameter id"] as JSON)
         }
-        render "foi!"
-        return true
+
+        def payment = paymentService.editPayment(params)
+
+        if(!payment){
+            render([error: "payment can't be edited"] as JSON)
+        }
+        
+        render(payment as JSON)
     }
 
-    @Transactional
     def remove() {
-        def payment = Payment.get(params.id)
-        try {
-            payment.delete(failOnError: true)
-        } catch (Exception e) {
-            println(e.getMessage())
-            render "nao foi"
-            return false
+
+        if(!params.id){
+            render([error: "missing parameter id"] as JSON)
         }
-        render "foi!"
-        return true
+
+        Boolean deleted = paymentService.deletePayment(params.id)
+
+        if(!deleted){
+            render([error: "payment can't be deleted"] as JSON)
+        }
+        
+        render([status: "payment sucessful deleted"] as JSON)
     }
 
 }

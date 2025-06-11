@@ -3,6 +3,9 @@ package com.asaas.mini
 class BootStrap {
 
     def init = { servletContext ->
+
+        //Hardcodando alguns dados para posteriores usos
+
         def customer = new Customer(
             name: "name",
             email: "email@email.com",
