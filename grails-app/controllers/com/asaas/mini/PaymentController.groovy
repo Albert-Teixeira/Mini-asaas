@@ -1,5 +1,7 @@
 package com.asaas.mini
 
+import grails.gorm.transactions.Transactional
+
 class PaymentController {
 
     def index() {
@@ -98,6 +100,7 @@ class PaymentController {
         // render p
     }
 
+    @Transactional
     def edit() {
         def payment = Payment.get(params.id)
         try {
@@ -112,10 +115,11 @@ class PaymentController {
         return true
     }
 
+    @Transactional
     def remove() {
         def payment = Payment.get(params.id)
         try {
-            payment.delete()
+            payment.delete(failOnError: true)
         } catch (Exception e) {
             println(e.getMessage())
             render "nao foi"
