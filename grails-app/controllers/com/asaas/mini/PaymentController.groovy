@@ -7,10 +7,11 @@ class PaymentController {
     PaymentService paymentService
 
     def index() {
-        def payments = paymentService.getPayments()
+        def payments = paymentService.getPayments(params.deleted)
 
         response.status = 200
-        render(payments as JSON)
+        
+        return [payments: payments]
     }
 
     def show() {

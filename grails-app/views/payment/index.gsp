@@ -6,6 +6,7 @@
     <title>Document</title>
 </head>
 <body>
-    View renderizada
+    <p>valor:</p>
+    <p>${payments[0].value}</p>
 </body>
 </html>

@@ -6,12 +6,13 @@ import grails.gorm.transactions.Transactional
 class PaymentService {
 
     def createPayment(customerId, payerId, paymentType, value, dueDate) {
+
         def customer = Customer.get(customerId) //validar se achou depois
 
         def payer = Customer.get(payerId) //validar se achou depois
 
         def payment = new Payment(
-            customer: customer
+            customer: customer,
             payer: payer,
             paymentType: paymentType,
             value: value,
@@ -31,8 +32,13 @@ class PaymentService {
         return payment
     }
 
-    def getPayments() {
-        def payments = Payment.getAll()
+    def getPayments(deleted = "0") {
+        if(deleted == "1"){
+            def payments = Payment.getAll()
+            return payments
+        }
+
+        def payments = Payment.findAllByDeleted(false)
 
         return payments
     }
