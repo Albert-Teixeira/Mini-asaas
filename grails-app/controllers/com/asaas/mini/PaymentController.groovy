@@ -33,6 +33,19 @@ class PaymentController {
     }
 
     def create() {
+
+        if(request.method == "GET"){
+            render(view: "create")
+            response.status = 200
+            return
+        }
+        
+        if(request.method != "POST"){
+            response.status = 405
+            render([error: "405 Method Not Allowed"] as JSON)
+            return
+        }
+
         def customerId = params.customer_id
         def payerId = params.payer_id
         def paymentType = params.payment_type
@@ -60,7 +73,7 @@ class PaymentController {
         }
 
         response.status = 201
-        render(payment as JSON)
+        redirect(action: "show", id: payment.id)
     }
 
     def edit() {
@@ -93,7 +106,8 @@ class PaymentController {
         }
         
         response.status = 200
-        render([status: "payment sucessful deleted"] as JSON)
+        //colocar flash aqui
+        redirect(action: "index")
     }
 
     def restore() {

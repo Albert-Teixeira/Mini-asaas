@@ -15,6 +15,8 @@
         <p>Data de vencimento: ${payment.dueDate}</p>
         <p>Date de recebimento: ${payment.dateReceived}</p>
         <p>-----------------------------------------------------------</p>
+        <a href="${createLink(action:"index")}">Voltar</a>
+        <a href="${createLink(action:"remove",id:"${payment.id}")}">Deletar Pagamento</a>
     </div>
 </body>
 </html>
