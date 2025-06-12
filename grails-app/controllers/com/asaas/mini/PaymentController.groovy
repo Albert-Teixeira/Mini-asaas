@@ -33,24 +33,26 @@ class PaymentController {
     }
 
     def create() {
-        def customer = params.customer
-        def payer = params.payer
+        def customerId = params.customer_id
+        def payerId = params.payer_id
         def paymentType = params.payment_type
         def value = params.value
         def dueDate = params.due_date
 
-        if(!customer || !payer || !paymentType || !value || !dueDate){
+        if(!customerId || !payerId || !paymentType || !value || !dueDate){
             def errorMessage = "missing parameters: "
-            if(!customer) errorMessage += "customer "
-            if(!payer) errorMessage += "payer "
+
+            if(!customerId) errorMessage += "customer_id "
+            if(!payerId) errorMessage += "payer_id "
             if(!paymentType) errorMessage += "payment_type "
             if(!value) errorMessage += "value "
             if(!dueDate) errorMessage += "due_date"
+
             response.status = 400
             render([error: errorMessage] as JSON)
         }
 
-        def payment = paymentService.createPayment(customer, payer, paymentType, value, dueDate)
+        def payment = paymentService.createPayment(customerId, payerId, paymentType, value, dueDate)
 
         if(!payment){
             response.status = 400
@@ -78,7 +80,6 @@ class PaymentController {
     }
 
     def remove() {
-
         if(!params.id){
             response.status = 400
             render([error: "missing parameter id"] as JSON)
@@ -93,6 +94,44 @@ class PaymentController {
         
         response.status = 200
         render([status: "payment sucessful deleted"] as JSON)
+    }
+
+    def restore() {
+        if(!params.id){
+            response.status = 400
+            render([error: "missing parameter id"] as JSON)
+        }
+
+        Boolean restored
+
+        if(!due_date){
+            restored = paymentService.restorePayment(params.id)
+        }
+        else{
+            restored = paymentService.restorePayment(params.id,params.due_date)
+        }
+
+
+        if(!restored){
+            response.status = 400
+            render([error: "payment can't be restored"] as JSON)
+        }
+        
+        response.status = 200
+        render([status: "payment sucessful restored"] as JSON)
+    }
+
+    def confirm() {
+        if(!params.id){
+            response.status = 400
+            render([error: "missing parameter id"] as JSON)
+        }
+
+        Boolean confirmed = paymentService.confirmPayment(params.id)
+    }
+
+    def generateReceipt() {
+        //To do
     }
 
 }
