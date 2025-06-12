@@ -10,8 +10,7 @@ class PaymentController {
         def payments = paymentService.getPayments(params.deleted)
 
         response.status = 200
-        
-        return [payments: payments]
+        render(view: "index", model: [payments: payments])
     }
 
     def show() {
@@ -30,7 +29,7 @@ class PaymentController {
         }
 
         response.status = 200
-        render(payment as JSON)
+        render(view: "show", model: [payment: payment])
     }
 
     def create() {

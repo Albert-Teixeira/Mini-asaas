@@ -7,7 +7,7 @@ class BootStrap {
         //Hardcodando alguns dados para posteriores usos
 
         def customer = new Customer(
-            name: "name",
+            name: "Carlos",
             email: "email@email.com",
             phoneNumber: "15999999999",
             cpfCnpj: "123.456.789-09",
@@ -21,7 +21,7 @@ class BootStrap {
 
         def payer = new Payer(
             customer: customer,
-            name: "name2",
+            name: "Rodrigo",
             email: "email2@email.com",
             phoneNumber: "15999999999",
             cpfCnpj: "123.456.789-09",
@@ -38,6 +38,17 @@ class BootStrap {
             payer: payer,
             paymentType: PaymentType.BOLETO,
             value: 45.55,
+            status: StatusType.PENDENTE,
+            dueDate: new Date(),
+            dateReceived: new Date())
+        
+        payment.save()
+
+        payment = new Payment(
+            customer: customer,
+            payer: payer,
+            paymentType: PaymentType.PIX,
+            value: 250,
             status: StatusType.PENDENTE,
             dueDate: new Date(),
             dateReceived: new Date())

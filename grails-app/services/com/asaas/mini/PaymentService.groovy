@@ -34,7 +34,7 @@ class PaymentService {
 
     def getPayments(deleted = "0") {
         if(deleted == "1"){
-            def payments = Payment.getAll()
+            def payments = Payment.findAllByDeleted(true)
             return payments
         }
 
@@ -130,7 +130,7 @@ class PaymentService {
         }
 
         if(payment.status = StatusType.RECEBIDA){
-            return false //Cobrança já foi paga e não tem porque restaurar
+            return true
         }
 
         if(payment.status == StatusType.VENCIDA && !dueDate){
@@ -144,9 +144,13 @@ class PaymentService {
         }
 
         try {
-            payment.status = StatusType.PENDENTE
+            if(payment.status != StatusType.RECEBIDA) {
+                payment.status = StatusType.PENDENTE
+            }
+            if(dueDate){
+                payment.dueDate = dueDate
+            }
             payment.deleted = false
-            if(dueDate) payment.dueDate = dueDate
         } catch(Exception e){
             println(e.getMessage())
             return false
