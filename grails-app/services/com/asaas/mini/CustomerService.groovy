@@ -1,18 +1,53 @@
 package com.asaas.mini
 
-import grails.gorm.services.Service
+import grails.gorm.transactions.Transactional
+import grails.validation.ValidationException
 
-@Service(Customer)
-interface CustomerService {
+@Transactional
 
-    Customer get(Serializable id)
+class CustomerService {
 
-    List<Customer> list(Map args)
+    Customer save(Customer customer) {
+        if (customer == null) {
+            throw new ValidationException("Customer cannot be null")
+        }
+        if (!customer.validate()) {
+            throw new ValidationException("Invalid customer data", customer.errors)
+        }
+        customer.save(flush: true)
+    }
 
-    Long count()
+    List<Customer> list(Map params) {
+        Customer.list(params)
+    }
 
-    void delete(Serializable id)
+    Long count() {
+        Customer.count()
+    }
 
-    Customer save(Customer customer)
+    Customer get(Serializable id) {
+        Customer.get(id)
+    }
 
+    Customer update(Customer customer) {
+        if (customer == null) {
+            throw new ValidationException("Customer cannot be null")
+        }
+        if (!customer.validate()) {
+            throw new ValidationException("Invalid customer data", customer.errors)
+        }
+        customer.update(flush: true)
+    }
+    
+    void delete(Serializable id) {
+        if (id == null) {
+            throw new ValidationException("ID cannot be null")
+        }
+        Customer customer = get(id)
+        if (customer) {
+            customer.delete(flush: true)
+        } else {
+            throw new ValidationException("Customer not found with ID: $id")
+        }
+    }
 }

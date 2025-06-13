@@ -219,9 +219,3 @@ class CustomerControllerSpec extends Specification implements ControllerUnitTest
         flash.message != null
     }
 }
-
-
-
-
-
-
