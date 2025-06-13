@@ -7,16 +7,16 @@ class PaymentController {
     PaymentService paymentService
 
     def index() {
-        def payments = paymentService.getPayments(params.deleted)
+        def paymentList = paymentService.getPayments(params.deleted)
 
         response.status = 200
-        render(view: "index", model: [payments: payments, statusType: StatusType, deleted: params.deleted])
+        render(view: "index", model: [paymentList: paymentList, statusType: StatusType, deleted: params.deleted])
     }
 
     def show() {
         if(!params.id){
             response.status = 400
-            render([error: "missing parameter id"] as JSON)
+            render([erro: "O parâmetro id está faltando"] as JSON)
             return
         }
 
@@ -24,7 +24,7 @@ class PaymentController {
 
         if(!payment){
             response.status = 404
-            render([error: "not found"] as JSON)
+            render([erro: "Esse pagamento não foi encontrado"] as JSON)
             return
         }
 
@@ -42,7 +42,7 @@ class PaymentController {
         
         if(request.method != "POST"){
             response.status = 405
-            render([error: "405 Method Not Allowed"] as JSON)
+            render([erro: "Método não permitido"] as JSON)
             return
         }
 
@@ -53,41 +53,40 @@ class PaymentController {
         def dueDate = params.due_date
 
         if(!customerId || !payerId || !paymentType || !value || !dueDate){
-            def errorMessage = "missing parameters: "
+            def errorMessage = "Faltam os parâmetros:"
 
-            if(!customerId) errorMessage += "customer_id "
-            if(!payerId) errorMessage += "payer_id "
-            if(!paymentType) errorMessage += "payment_type "
-            if(!value) errorMessage += "value "
-            if(!dueDate) errorMessage += "due_date"
+            if(!customerId) errorMessage += " customer_id"
+            if(!payerId) errorMessage += " payer_id"
+            if(!paymentType) errorMessage += " payment_type"
+            if(!value) errorMessage += " value"
+            if(!dueDate) errorMessage += " due_date"
 
             response.status = 400
-            render([error: errorMessage] as JSON)
+            render([erro: errorMessage] as JSON)
         }
 
         def payment = paymentService.createPayment(customerId, payerId, paymentType, value, dueDate)
 
         if(!payment){
             response.status = 400
-            render([error: "payment can't be created"] as JSON)
+            render([erro: "Não foi possível criar o pagamento"] as JSON)
         }
 
         response.status = 201
         redirect(action: "show", id: payment.id)
     }
 
-    //Isso aqui vai virar Receber pagamento, Mudar valor do pagamento, 
     def edit() {
 
         if(request.method != "GET" && request.method != "POST"){
             response.status = 405
-            render([error: "405 Method Not Allowed"] as JSON)
+            render([erro: "Método não permitido"] as JSON)
             return
         }
 
         if(!params.id){
             response.status = 400
-            render([error: "missing parameter id"] as JSON)
+            render([erro: "O parâmetro id está faltando"] as JSON)
         }
 
         if(request.method == "GET"){
@@ -101,7 +100,7 @@ class PaymentController {
 
         if(!payment){
             response.status = 400
-            render([error: "payment can't be edited"] as JSON)
+            render([erro: "O pagamento não pôde ser editado"] as JSON)
         }
         
         redirect(view: "show", model: [payment: payment])
@@ -110,25 +109,24 @@ class PaymentController {
     def remove() {
         if(!params.id){
             response.status = 400
-            render([error: "missing parameter id"] as JSON)
+            render([erro: "O parâmetro id está faltando"] as JSON)
         }
 
         Boolean deleted = paymentService.deletePayment(params.id)
 
         if(!deleted){
             response.status = 400
-            render([error: "payment can't be deleted"] as JSON)
+            render([erro: "O pagamento não pôde ser deletado"] as JSON)
         }
         
         response.status = 200
-        //colocar flash aqui
         redirect(action: "index")
     }
 
     def restore() {
         if(!params.id){
             response.status = 400
-            render([error: "missing parameter id"] as JSON)
+            render([erro: "O parâmetro id está faltando"] as JSON)
         }
 
         def payment
@@ -137,38 +135,32 @@ class PaymentController {
             payment = paymentService.restorePayment(params.id)
         }
         else{
-            payment = paymentService.restorePayment(params.id,params.due_date) //Caso o pagamento excluido ja tenha vencido e precise de uma renovação
+            payment = paymentService.restorePayment(params.id,params.due_date)
         }
 
         if(!payment){
             response.status = 400
-            render([error: "payment can't be restored"] as JSON)
+            render([erro: "O pagamento não pôde ser restaurado"] as JSON)
         }
         
         response.status = 200
-        //flash aqui
         render(view: "show", model: [payment: payment, statusType: StatusType])
     }
 
     def confirm() {
         if(!params.id){
             response.status = 400
-            render([error: "missing parameter id"] as JSON)
+            render([erro: "O parâmetro id está faltando"] as JSON)
         }
 
         Boolean confirmed = paymentService.confirmPayment(params.id)
 
         if(!confirmed){
             response.status = 400
-            render([error: "payment can't be confirmed"] as JSON)
+            render([erro: "O pagamento não pôde ser confirmado"] as JSON)
         }
         
         response.status = 200
         redirect(action: "show", id: params.id)
     }
-
-    def generateReceipt() {
-        //To do
-    }
-
 }

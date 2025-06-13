@@ -4,7 +4,7 @@ class BootStrap {
 
     def init = { servletContext ->
 
-        //Hardcodando alguns dados para posteriores usos
+        // Os dados abaixos vão ser inseridos para que seja possível fazer testes na aplicação
 
         def customer = new Customer(
             name: "Carlos",
@@ -40,7 +40,7 @@ class BootStrap {
             value: 45.55,
             status: StatusType.PENDENTE,
             dueDate: new Date(),
-            dateReceived: new Date())
+            dateReceived: null)
         
         payment.save()
 
@@ -51,7 +51,7 @@ class BootStrap {
             value: 250,
             status: StatusType.PENDENTE,
             dueDate: new Date(),
-            dateReceived: new Date())
+            dateReceived: null)
         
         payment.save()
     }
