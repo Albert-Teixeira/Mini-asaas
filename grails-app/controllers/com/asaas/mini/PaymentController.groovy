@@ -7,7 +7,7 @@ class PaymentController {
     PaymentService paymentService
 
     def index() {
-        def payments = paymentService.getPayments(params.deleted)
+        List<Payment> payments = paymentService.getPayments(params.deleted)
 
         response.status = 200
         render(view: "index", model: [payments: payments, statusType: StatusType, deleted: params.deleted])
@@ -20,7 +20,7 @@ class PaymentController {
             return
         }
 
-        def payment = paymentService.getPaymentById(params.id)
+        Payment payment = paymentService.getPaymentById(params.id)
 
         if(!payment){
             response.status = 404
@@ -46,14 +46,14 @@ class PaymentController {
             return
         }
 
-        def customerId = params.customer_id
-        def payerId = params.payer_id
-        def paymentType = params.payment_type
-        def value = params.value
-        def dueDate = params.due_date
+        String customerId = params.customer_id
+        String payerId = params.payer_id
+        String paymentType = params.payment_type
+        String value = params.value
+        String dueDate = params.due_date
 
         if(!customerId || !payerId || !paymentType || !value || !dueDate){
-            def errorMessage = "missing parameters: "
+            String errorMessage = "missing parameters: "
 
             if(!customerId) errorMessage += "customer_id "
             if(!payerId) errorMessage += "payer_id "
@@ -65,7 +65,7 @@ class PaymentController {
             render([error: errorMessage] as JSON)
         }
 
-        def payment = paymentService.createPayment(customerId, payerId, paymentType, value, dueDate)
+        Payment payment = paymentService.createPayment(customerId, payerId, paymentType, value, dueDate)
 
         if(!payment){
             response.status = 400
@@ -91,13 +91,13 @@ class PaymentController {
         }
 
         if(request.method == "GET"){
-            def payment = Payment.get(params.id)
+            Payment payment = Payment.get(params.id)
             response.status=200
             render(view: "edit", model: [payment: payment])
             return
         }
         
-        def payment = paymentService.editPayment(params.id, params.value, params.due_date)
+        Payment payment = paymentService.editPayment(params.id, params.value, params.due_date)
 
         if(!payment){
             response.status = 400
@@ -131,7 +131,7 @@ class PaymentController {
             render([error: "missing parameter id"] as JSON)
         }
 
-        def payment
+        Payment payment
 
         if(!params.due_date){
             payment = paymentService.restorePayment(params.id)
