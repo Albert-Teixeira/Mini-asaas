@@ -1,0 +1,197 @@
+package com.asaas.mini
+
+import grails.gorm.transactions.Transactional
+import java.text.SimpleDateFormat
+
+@Transactional
+class PaymentService {
+
+    def createPayment(customerId, payerId, paymentType, value, dueDate) {
+
+        def customer = Customer.get(customerId)
+
+        def payer = Payer.get(payerId)
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+        Date formatedDueDate = format.parse(dueDate);
+
+        Date today = new Date()
+        if(formatedDueDate.before(today)){
+            return null
+        }
+
+        def payment = new Payment(
+            customer: customer,
+            payer: payer,
+            paymentType: paymentType,
+            value: value,
+            status: StatusType.PENDENTE,
+            dueDate: formatedDueDate,
+            dateReceived: null)
+
+        try {
+            payment.save(failOnError: true)
+        } catch (Exception e) {
+            println(e.getMessage())
+            return null
+        }
+        
+        return payment
+    }
+
+    def getPayments(deleted) {
+        if(deleted == "1"){
+            def payments = Payment.findAllByDeleted(true)
+            return payments
+        }
+
+        def payments = Payment.findAllByDeleted(false)
+
+        return payments
+    }
+
+    def getPaymentById(id) {
+        def payment = Payment.get(id)
+
+        return payment
+    }
+
+    def getPaymentsByCustomer(customerId) {
+        def customer = Customer.get(customerId)
+
+        def payments = Payment.findAll {
+            customer == customer
+        }
+
+        return payments
+    }
+
+    def getPaymentsByPayer(payerId) {
+        def payer = Payment.get(payerId)
+
+        def payments = Payment.findAll {
+            payer == payer
+        }
+
+        return payments
+    }
+
+    def getPaymentsByCustomerAndPayer(customerId, payerId) {
+        def customer = Customer.get(customerId)
+        
+        def payer = Payment.get(payerId)
+
+        def payments = Payment.findAll {
+            customer == customer
+            payer == payer
+        }
+
+        return payments
+    }
+
+    def editPayment(id, value, dueDate) {
+        def payment = Payment.get(id)
+
+        def sanitizedValue = Double.parseDouble(value)
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+        Date formatedDueDate = format.parse(dueDate);
+
+        Date today = new Date()
+        if(formatedDueDate.before(today)){
+            return null
+        }
+
+        try {
+            payment.value = sanitizedValue
+            payment.dueDate = formatedDueDate
+            payment.save(failOnError: true)
+        } catch (Exception e) {
+            println(e.getMessage())
+            return null
+        }
+
+        return payment
+    }
+
+    def deletePayment(id) {
+        def payment = Payment.get(id)
+
+        if(payment.deleted == true){
+            return false
+        }
+
+        try {
+            if(payment.status == StatusType.VENCIDA || payment.status == StatusType.RECEBIDA){
+                payment.deleted = true
+            }
+            else{
+                payment.deleted = true
+                payment.status = StatusType.ARQUIVADA
+            }
+            payment.save(failOnError: true)
+        } catch (Exception e) {
+            println(e.getMessage())
+            return false
+        }
+
+        return true
+    }
+
+    def restorePayment(id,dueDate = null) {
+        def payment = Payment.get(id)
+
+        if(payment.deleted == false){
+            return null
+        }
+
+        if(payment.status == StatusType.RECEBIDA){
+            return null
+        }
+
+        if(payment.status == StatusType.VENCIDA && !dueDate){
+            return null
+        }
+
+        Date today = new Date()
+        if(dueDate && dueDate.before(today)){
+            return null
+        }
+
+        try {
+            if(payment.status != StatusType.RECEBIDA) {
+                payment.status = StatusType.PENDENTE
+            }
+            if(dueDate){
+                payment.dueDate = dueDate
+            }
+            payment.deleted = false
+        } catch(Exception e){
+            println(e.getMessage())
+            return null
+        }
+
+        return payment
+    }
+
+    def confirmPayment(id){
+        def payment = Payment.get(id)
+
+        if(payment.deleted){
+            return false
+        }
+
+        if(payment.status != StatusType.PENDENTE){
+            return false
+        }
+
+        try {
+            payment.status = StatusType.RECEBIDA
+            payment.dateReceived = new Date()
+        } catch(Exception e) {
+            println(e.getMessage())
+            return false
+        }
+
+        return true
+    }
+}
