@@ -10,7 +10,7 @@ class PaymentController {
         def payments = paymentService.getPayments(params.deleted)
 
         response.status = 200
-        render(view: "index", model: [payments: payments])
+        render(view: "index", model: [payments: payments, statusType: StatusType, deleted: params.deleted])
     }
 
     def show() {
@@ -29,7 +29,7 @@ class PaymentController {
         }
 
         response.status = 200
-        render(view: "show", model: [payment: payment])
+        render(view: "show", model: [payment: payment, statusType: StatusType])
     }
 
     def create() {
@@ -131,23 +131,23 @@ class PaymentController {
             render([error: "missing parameter id"] as JSON)
         }
 
-        Boolean restored
+        def payment
 
-        if(!due_date){
-            restored = paymentService.restorePayment(params.id)
+        if(!params.due_date){
+            payment = paymentService.restorePayment(params.id)
         }
         else{
-            restored = paymentService.restorePayment(params.id,params.due_date)
+            payment = paymentService.restorePayment(params.id,params.due_date) //Caso o pagamento excluido ja tenha vencido e precise de uma renovação
         }
 
-
-        if(!restored){
+        if(!payment){
             response.status = 400
             render([error: "payment can't be restored"] as JSON)
         }
         
         response.status = 200
-        render([status: "payment sucessful restored"] as JSON)
+        //flash aqui
+        render(view: "show", model: [payment: payment, statusType: StatusType])
     }
 
     def confirm() {
@@ -157,6 +157,14 @@ class PaymentController {
         }
 
         Boolean confirmed = paymentService.confirmPayment(params.id)
+
+        if(!confirmed){
+            response.status = 400
+            render([error: "payment can't be confirmed"] as JSON)
+        }
+        
+        response.status = 200
+        redirect(action: "show", id: params.id)
     }
 
     def generateReceipt() {

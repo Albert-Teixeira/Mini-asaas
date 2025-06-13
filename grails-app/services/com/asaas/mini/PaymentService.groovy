@@ -36,7 +36,7 @@ class PaymentService {
         return payment
     }
 
-    def getPayments(deleted = "0") {
+    def getPayments(deleted) {
         if(deleted == "1"){
             def payments = Payment.findAllByDeleted(true)
             return payments
@@ -133,22 +133,23 @@ class PaymentService {
 
     def restorePayment(id,dueDate = null) {
         def payment = Payment.get(id)
+        println(payment.status)
 
         if(payment.deleted == false){
-            return false //Cobrança não foi deletada
+            return null //Cobrança não foi deletada
         }
 
-        if(payment.status = StatusType.RECEBIDA){
-            return true
+        if(payment.status == StatusType.RECEBIDA){
+            return null
         }
 
         if(payment.status == StatusType.VENCIDA && !dueDate){
-            return false //Cobrança vencida e não foi apresentado uma nova data de vencimento
+            return null //Cobrança vencida e não foi apresentado uma nova data de vencimento
         }
 
         if(dueDate){
             if(dueDate < Date()){
-                return false //Nova data de cobrança menor que a data atual
+                return null //Nova data de cobrança menor que a data atual
             }
         }
 
@@ -162,12 +163,12 @@ class PaymentService {
             payment.deleted = false
         } catch(Exception e){
             println(e.getMessage())
-            return false
+            return null
         }
 
         //To do: Notificar cliente
 
-        return true
+        return payment
     }
 
     def confirmPayment(id){
@@ -183,6 +184,7 @@ class PaymentService {
 
         try {
             payment.status = StatusType.RECEBIDA //To do: Add saldo para o cliente depois?
+            payment.dateReceived = new Date()
         } catch(Exception e) {
             println(e.getMessage())
             return false

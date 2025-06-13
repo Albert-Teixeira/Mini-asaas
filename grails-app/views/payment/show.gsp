@@ -16,7 +16,16 @@
         <p>Date de recebimento: ${payment.dateReceived}</p>
         <p>-----------------------------------------------------------</p>
         <a href="${createLink(action:"index")}">Voltar</a>
-        <a href="${createLink(action:"remove",id:"${payment.id}")}">Deletar Pagamento</a>
+        
+        <g:if test="${ payment.status == statusType.ARQUIVADA }">
+            <a href="${createLink(action:"show",id:"${payment.id}")}">Acessar pagamento</a>
+            <a href="${createLink(action:"restore",id:"${payment.id}")}">Restaurar pagamento</a>
+        </g:if>
+        <g:elseif test="${payment.status != statusType.RECEBIDA}">
+            <a href="${createLink(action:"edit",id:"${payment.id}")}">Editar pagamento</a>
+            <a href="${createLink(action:"remove",id:"${payment.id}")}">Deletar Pagamento</a>
+            <a href="${createLink(action:"confirm",id:"${payment.id}")}">Receber Pagamento</a>
+        </g:elseif>
     </div>
 </body>
 </html>
