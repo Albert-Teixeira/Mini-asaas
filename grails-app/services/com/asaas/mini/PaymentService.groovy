@@ -12,16 +12,8 @@ class PaymentService {
 
         def payer = Payer.get(payerId) //validar se achou depois
 
-        println(customer)
-        println(payer)
-        println(paymentType)
-        println(value)
-        println(dueDate)
-
-        SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
-        Date formatedDueDate = formato.parse(dueDate);
-
-        println(formatedDueDate)
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+        Date formatedDueDate = format.parse(dueDate);
 
         def payment = new Payment(
             customer: customer,
@@ -94,11 +86,16 @@ class PaymentService {
         return payments
     }
 
-    def editPayment(properties) {
-        def payment = Payment.get(properties.id)
+    def editPayment(id, value, dueDate) {
+        def payment = Payment.get(id)
+
+        def sanitizedValue = Double.parseDouble(value)
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+        Date formatedDueDate = format.parse(dueDate);
 
         try {
-            payment.properties = properties
+            payment.value = sanitizedValue
+            payment.dueDate = formatedDueDate
             payment.save(failOnError: true)
         } catch (Exception e) {
             println(e.getMessage())

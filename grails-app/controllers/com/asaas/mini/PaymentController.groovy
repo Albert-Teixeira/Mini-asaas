@@ -76,20 +76,35 @@ class PaymentController {
         redirect(action: "show", id: payment.id)
     }
 
+    //Isso aqui vai virar Receber pagamento, Mudar valor do pagamento, 
     def edit() {
+
+        if(request.method != "GET" && request.method != "POST"){
+            response.status = 405
+            render([error: "405 Method Not Allowed"] as JSON)
+            return
+        }
+
         if(!params.id){
             response.status = 400
             render([error: "missing parameter id"] as JSON)
         }
 
-        def payment = paymentService.editPayment(params)
+        if(request.method == "GET"){
+            def payment = Payment.get(params.id)
+            response.status=200
+            render(view: "edit", model: [payment: payment])
+            return
+        }
+        
+        def payment = paymentService.editPayment(params.id, params.value, params.due_date)
 
         if(!payment){
             response.status = 400
             render([error: "payment can't be edited"] as JSON)
         }
         
-        render(payment as JSON)
+        redirect(view: "show", model: [payment: payment])
     }
 
     def remove() {

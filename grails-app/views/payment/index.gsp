@@ -15,7 +15,8 @@
                 <p>Status: ${payment.status}</p>
                 <p>Data de vencimento: ${payment.dueDate}</p>
                 <p>Date de recebimento: ${payment.dateReceived}</p>
-                <a href="${createLink(action:"show",id:"${payment.id}")}">Link</a>
+                <a href="${createLink(action:"show",id:"${payment.id}")}">Acessar pagamento</a>
+                <a href="${createLink(action:"edit",id:"${payment.id}")}">Editar pagamento</a>
                 <a href="${createLink(action:"remove",id:"${payment.id}")}">Deletar Pagamento</a>
                 <p>-----------------------------------------------------------</p>
             </div>

@@ -6,17 +6,17 @@
     <title>Document</title>
 </head>
 <body>
-    <g:each var="payment" in="${ payments }">
-        <div>
+    <div>
+        <form action="${createLink(action: "edit", id: payment.id)}" method="post">
             <p>Cliente: ${payment.customer.name}</p>
             <p>Pagador: ${payment.payer.name}</p>
             <p>Tipo de pagamento: ${payment.paymentType}</p>
-            <p>Valor: ${payment.value}</p>
-            <p>Status: ${payment.status}</p>
-            <p>Data de vencimento: ${payment.dueDate}</p>
-            <p>Date de recebimento: ${payment.dateReceived}</p>
-            <p>-----------------------------------------------------------</p>
-        </div>
-    </g:each>
+            <p>Valor: <input type="text" id="value" name="value" value="${payment.value}"></p>
+            <p>Data de vencimento: <input type="datetime-local" id="due_date" name="due_date" value="${payment.dueDate}"/></p>
+            <input type="submit" value="Editar Pagamento">
+        </form>
+        <p>-----------------------------------------------------------</p>
+        <a href="${createLink(action:"index")}">Voltar</a>
+    </div>
 </body>
 </html>
