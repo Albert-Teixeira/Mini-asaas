@@ -6,16 +6,16 @@ import java.text.SimpleDateFormat
 @Transactional
 class PaymentService {
 
-    def createPayment(customerId, payerId, paymentType, value, dueDate) {
+    Payment createPayment(String customerId, String payerId, String paymentType, String value, String dueDate) {
 
-        def customer = Customer.get(customerId) //validar se achou depois
+        Customer customer = Customer.get(customerId) //validar se achou depois
 
-        def payer = Payer.get(payerId) //validar se achou depois
+        Payer payer = Payer.get(payerId) //validar se achou depois
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
         Date formatedDueDate = format.parse(dueDate);
 
-        def payment = new Payment(
+        Payment payment = new Payment(
             customer: customer,
             payer: payer,
             paymentType: paymentType,
@@ -36,49 +36,49 @@ class PaymentService {
         return payment
     }
 
-    def getPayments(deleted) {
+    List<Payment> getPayments(String deleted) {
         if(deleted == "1"){
-            def payments = Payment.findAllByDeleted(true)
+            List<Payment> payments = Payment.findAllByDeleted(true)
             return payments
         }
 
-        def payments = Payment.findAllByDeleted(false)
+        List<Payment> payments = Payment.findAllByDeleted(false)
 
         return payments
     }
 
-    def getPaymentById(id) {
-        def payment = Payment.get(id)
+    Payment getPaymentById(String id) {
+        Payment payment = Payment.get(id)
 
         return payment
     }
 
-    def getPaymentsByCustomer(customerId) {
-        def customer = Customer.get(customerId)
+    List<Payment> getPaymentsByCustomer(String customerId) {
+        Customer customer = Customer.get(customerId)
 
-        def payments = Payment.findAll {
+        List<Payment> payments = Payment.findAll {
             customer == customer
         }
 
         return payments
     }
 
-    def getPaymentsByPayer(payerId) {
-        def payer = Payment.get(payerId)
+    List<Payment> getPaymentsByPayer(String payerId) {
+        Payer payer = Payment.get(payerId)
 
-        def payments = Payment.findAll {
+        List<Payment> payments = Payment.findAll {
             payer == payer
         }
 
         return payments
     }
 
-    def getPaymentsByCustomerAndPayer(customerId, payerId) {
-        def customer = Customer.get(customerId)
+    List<Payment> getPaymentsByCustomerAndPayer(String customerId, String payerId) {
+        Customer customer = Customer.get(customerId)
         
-        def payer = Payment.get(payerId)
+        Payer payer = Payment.get(payerId)
 
-        def payments = Payment.findAll {
+        List<Payment> payments = Payment.findAll {
             customer == customer
             payer == payer
         }
@@ -86,10 +86,11 @@ class PaymentService {
         return payments
     }
 
-    def editPayment(id, value, dueDate) {
-        def payment = Payment.get(id)
+    Payment editPayment(String id, String value, String dueDate) {
+        Payment payment = Payment.get(id)
 
-        def sanitizedValue = Double.parseDouble(value)
+        Double sanitizedValue = Double.parseDouble(value)
+
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
         Date formatedDueDate = format.parse(dueDate);
 
@@ -105,8 +106,8 @@ class PaymentService {
         return payment
     }
 
-    def deletePayment(id) {
-        def payment = Payment.get(id)
+    Boolean deletePayment(String id) {
+        Payment payment = Payment.get(id)
 
         if(payment.deleted == true){
             return false //Cobrança já deletada
@@ -131,9 +132,8 @@ class PaymentService {
         return true
     }
 
-    def restorePayment(id,dueDate = null) {
-        def payment = Payment.get(id)
-        println(payment.status)
+    Payment restorePayment(String id, String dueDate = null) {
+        Payment payment = Payment.get(id)
 
         if(payment.deleted == false){
             return null //Cobrança não foi deletada
@@ -171,8 +171,8 @@ class PaymentService {
         return payment
     }
 
-    def confirmPayment(id){
-        def payment = Payment.get(id)
+    Boolean confirmPayment(String id){
+        Payment payment = Payment.get(id)
 
         if(payment.deleted){
             return false //Cobrança deletada
