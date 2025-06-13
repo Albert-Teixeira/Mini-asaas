@@ -15,6 +15,11 @@ class PaymentService {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
         Date formatedDueDate = format.parse(dueDate);
 
+        Date today = new Date()
+        if(formatedDueDate.before(today)){
+            return null
+        }
+
         def payment = new Payment(
             customer: customer,
             payer: payer,
@@ -91,6 +96,11 @@ class PaymentService {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
         Date formatedDueDate = format.parse(dueDate);
 
+        Date today = new Date()
+        if(formatedDueDate.before(today)){
+            return null
+        }
+
         try {
             payment.value = sanitizedValue
             payment.dueDate = formatedDueDate
@@ -142,10 +152,9 @@ class PaymentService {
             return null
         }
 
-        if(dueDate){
-            if(dueDate < Date()){
-                return null
-            }
+        Date today = new Date()
+        if(dueDate && dueDate.before(today)){
+            return null
         }
 
         try {
