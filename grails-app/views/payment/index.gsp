@@ -6,11 +6,11 @@
         <title>Document</title>
     </head>
     <body>
-        <g:if test="${ deleted == "1" }">
+        <g:if test="${ deleted }">
            <a href="${createLink(action:"index")}">Voltar</a>
         </g:if>
         <g:else>
-           <a href="${createLink(action:"index",params:[deleted:1])}">Ver cobranças removidas</a>
+           <a href="${createLink(action:"index",params:[deleted:"1"])}">Ver cobranças removidas</a>
         </g:else>
         <g:each var="payment" in="${ payments }">
             <div>

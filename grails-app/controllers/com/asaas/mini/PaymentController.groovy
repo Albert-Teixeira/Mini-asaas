@@ -2,15 +2,18 @@ package com.asaas.mini
 
 import grails.converters.JSON
 
+import java.text.SimpleDateFormat
+
 class PaymentController {
 
     PaymentService paymentService
 
     def index() {
-        List<Payment> payments = paymentService.getPayments(params.deleted)
+        Boolean deleted = (params.id == "1")
+        List<Payment> payments = paymentService.getPayments(deleted)
 
         response.status = 200
-        render(view: "index", model: [payments: payments, statusType: StatusType, deleted: params.deleted])
+        render(view: "index", model: [payments: payments, statusType: StatusType, deleted: deleted])
     }
 
     def show() {
@@ -20,7 +23,9 @@ class PaymentController {
             return
         }
 
-        Payment payment = paymentService.getPaymentById(params.id)
+        int id = Integer.parseInt(params.id)
+
+        Payment payment = paymentService.getPaymentById(id)
 
         if(!payment){
             response.status = 404
@@ -46,11 +51,12 @@ class PaymentController {
             return
         }
 
-        String customerId = params.customer_id
-        String payerId = params.payer_id
-        String paymentType = params.payment_type
-        String value = params.value
-        String dueDate = params.due_date
+        int customerId = Integer.parseInt(params.customer_id)
+        int payerId = Integer.parseInt(params.payer_id)
+        PaymentType paymentType = PaymentType.valueOf(params.payment_type)
+        Double value = Double.parseDouble(params.value)
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+        Date dueDate = format.parse(params.due_date);
 
         if(!customerId || !payerId || !paymentType || !value || !dueDate){
             String errorMessage = "missing parameters: "
@@ -96,8 +102,13 @@ class PaymentController {
             render(view: "edit", model: [payment: payment])
             return
         }
+
+        int id = Integer.parseInt(params.id)
+        Double value = Double.parseDouble(params.value)
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm")
+        Date dueDate = format.parse(params.due_date)
         
-        Payment payment = paymentService.editPayment(params.id, params.value, params.due_date)
+        Payment payment = paymentService.editPayment(id, value, dueDate)
 
         if(!payment){
             response.status = 400
@@ -113,7 +124,9 @@ class PaymentController {
             render([error: "missing parameter id"] as JSON)
         }
 
-        Boolean deleted = paymentService.deletePayment(params.id)
+        int id = Integer.parseInt(params.id)
+
+        Boolean deleted = paymentService.deletePayment(id)
 
         if(!deleted){
             response.status = 400
@@ -133,11 +146,15 @@ class PaymentController {
 
         Payment payment
 
+        int id = Integer.parseInt(params.id)
+
         if(!params.due_date){
-            payment = paymentService.restorePayment(params.id)
+            payment = paymentService.restorePayment(id)
         }
         else{
-            payment = paymentService.restorePayment(params.id,params.due_date) //Caso o pagamento excluido ja tenha vencido e precise de uma renovação
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+            Date dueDate = format.parse(params.due_date);
+            payment = paymentService.restorePayment(id,dueDate) //Caso o pagamento excluido ja tenha vencido e precise de uma renovação
         }
 
         if(!payment){
@@ -156,7 +173,9 @@ class PaymentController {
             render([error: "missing parameter id"] as JSON)
         }
 
-        Boolean confirmed = paymentService.confirmPayment(params.id)
+        int id = Integer.parseInt(id)
+
+        Boolean confirmed = paymentService.confirmPayment(id)
 
         if(!confirmed){
             response.status = 400

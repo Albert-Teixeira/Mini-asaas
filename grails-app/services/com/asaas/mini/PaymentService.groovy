@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat
 @Transactional
 class PaymentService {
 
-    Payment createPayment(String customerId, String payerId, String paymentType, String value, String dueDate) {
+    Payment createPayment(int customerId, int payerId, PaymentType paymentType, Double value, Date dueDate) {
 
         Customer customer = Customer.get(customerId) //validar se achou depois
 
@@ -36,8 +36,8 @@ class PaymentService {
         return payment
     }
 
-    List<Payment> getPayments(String deleted) {
-        if(deleted == "1"){
+    List<Payment> getPayments(Boolean deleted) {
+        if(deleted){
             List<Payment> payments = Payment.findAllByDeleted(true)
             return payments
         }
@@ -47,13 +47,13 @@ class PaymentService {
         return payments
     }
 
-    Payment getPaymentById(String id) {
+    Payment getPaymentById(int id) {
         Payment payment = Payment.get(id)
 
         return payment
     }
 
-    List<Payment> getPaymentsByCustomer(String customerId) {
+    List<Payment> getPaymentsByCustomer(int customerId) {
         Customer customer = Customer.get(customerId)
 
         List<Payment> payments = Payment.findAll {
@@ -63,7 +63,7 @@ class PaymentService {
         return payments
     }
 
-    List<Payment> getPaymentsByPayer(String payerId) {
+    List<Payment> getPaymentsByPayer(int payerId) {
         Payer payer = Payment.get(payerId)
 
         List<Payment> payments = Payment.findAll {
@@ -73,7 +73,7 @@ class PaymentService {
         return payments
     }
 
-    List<Payment> getPaymentsByCustomerAndPayer(String customerId, String payerId) {
+    List<Payment> getPaymentsByCustomerAndPayer(int customerId, int payerId) {
         Customer customer = Customer.get(customerId)
         
         Payer payer = Payment.get(payerId)
@@ -86,17 +86,12 @@ class PaymentService {
         return payments
     }
 
-    Payment editPayment(String id, String value, String dueDate) {
+    Payment editPayment(int id, Double value, Date dueDate) {
         Payment payment = Payment.get(id)
 
-        Double sanitizedValue = Double.parseDouble(value)
-
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
-        Date formatedDueDate = format.parse(dueDate);
-
         try {
-            payment.value = sanitizedValue
-            payment.dueDate = formatedDueDate
+            payment.value = value
+            payment.dueDate = dueDate
             payment.save(failOnError: true)
         } catch (Exception e) {
             println(e.getMessage())
@@ -106,7 +101,7 @@ class PaymentService {
         return payment
     }
 
-    Boolean deletePayment(String id) {
+    Boolean deletePayment(int id) {
         Payment payment = Payment.get(id)
 
         if(payment.deleted == true){
@@ -132,7 +127,7 @@ class PaymentService {
         return true
     }
 
-    Payment restorePayment(String id, String dueDate = null) {
+    Payment restorePayment(int id, Date dueDate = null) {
         Payment payment = Payment.get(id)
 
         if(payment.deleted == false){
@@ -144,7 +139,7 @@ class PaymentService {
         }
 
         if(payment.status == StatusType.VENCIDA && !dueDate){
-            return null //Cobrança vencida e não foi apresentado uma nova data de vencimento
+            return null //Cobrança vencida e não foi apresentada uma nova data de vencimento
         }
 
         if(dueDate){
@@ -154,9 +149,7 @@ class PaymentService {
         }
 
         try {
-            if(payment.status != StatusType.RECEBIDA) {
-                payment.status = StatusType.PENDENTE
-            }
+            payment.status = StatusType.PENDENTE
             if(dueDate){
                 payment.dueDate = dueDate
             }
@@ -171,7 +164,7 @@ class PaymentService {
         return payment
     }
 
-    Boolean confirmPayment(String id){
+    Boolean confirmPayment(int id){
         Payment payment = Payment.get(id)
 
         if(payment.deleted){
