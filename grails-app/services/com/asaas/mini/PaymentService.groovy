@@ -1,7 +1,6 @@
 package com.asaas.mini
 
 import grails.gorm.transactions.Transactional
-import java.text.SimpleDateFormat
 
 @Transactional
 class PaymentService {
@@ -12,16 +11,13 @@ class PaymentService {
 
         Payer payer = Payer.get(payerId) //validar se achou depois
 
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
-        Date formatedDueDate = format.parse(dueDate);
-
         Payment payment = new Payment(
             customer: customer,
             payer: payer,
             paymentType: paymentType,
             value: value,
             status: StatusType.PENDENTE,
-            dueDate: formatedDueDate,
+            dueDate: dueDate,
             dateReceived: null)
 
         try {

@@ -9,7 +9,7 @@ class PaymentController {
     PaymentService paymentService
 
     def index() {
-        Boolean deleted = (params.id == "1")
+        Boolean deleted = (params.deleted == "1")
         List<Payment> payments = paymentService.getPayments(deleted)
 
         response.status = 200
@@ -173,7 +173,7 @@ class PaymentController {
             render([error: "missing parameter id"] as JSON)
         }
 
-        int id = Integer.parseInt(id)
+        int id = Integer.parseInt(params.id)
 
         Boolean confirmed = paymentService.confirmPayment(id)
 
