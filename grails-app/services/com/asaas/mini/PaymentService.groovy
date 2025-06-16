@@ -5,12 +5,7 @@ import grails.gorm.transactions.Transactional
 @Transactional
 class PaymentService {
 
-    Payment createPayment(int customerId, int payerId, PaymentType paymentType, Double value, Date dueDate) {
-
-        Customer customer = Customer.get(customerId) //validar se achou depois
-
-        Payer payer = Payer.get(payerId) //validar se achou depois
-
+    Payment createPayment(Customer customer, Payer payer, PaymentType paymentType, Double value, Date dueDate) {
         Payment payment = new Payment(
             customer: customer,
             payer: payer,

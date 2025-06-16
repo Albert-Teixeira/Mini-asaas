@@ -71,7 +71,10 @@ class PaymentController {
             render([error: errorMessage] as JSON)
         }
 
-        Payment payment = paymentService.createPayment(customerId, payerId, paymentType, value, dueDate)
+        Customer customer = Customer.get(customerId)
+        Payer payer = Payer.get(payerId)
+
+        Payment payment = paymentService.createPayment(customer, payer, paymentType, value, dueDate)
 
         if(!payment){
             response.status = 400
