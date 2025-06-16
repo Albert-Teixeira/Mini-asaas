@@ -7,7 +7,7 @@
 </head>
 <body>
     <div>
-        <form action="${createLink(action: "edit", id: payment.id)}" method="post">
+        <form action="${createLink(action: "update", id: payment.id)}" method="post">
             <p>Cliente: ${payment.customer.name}</p>
             <p>Pagador: ${payment.payer.name}</p>
             <p>Tipo de pagamento: ${payment.paymentType}</p>

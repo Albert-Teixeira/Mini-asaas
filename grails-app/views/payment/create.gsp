@@ -6,7 +6,7 @@
         <title>Criar Cobrança</title>
     </head>
     <body>
-        <form action="${createLink(action: "create")}" method="post">
+        <form action="${createLink(action: "save")}" method="post">
             <label for="customer_id">Id do cliente:</label><br>
             <input type="text" id="customer_id" name="customer_id"><br>
 

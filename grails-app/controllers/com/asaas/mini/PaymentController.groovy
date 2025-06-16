@@ -6,6 +6,16 @@ class PaymentController {
 
     PaymentService paymentService
 
+    static allowedMethods = [index: "GET",
+        show: "GET",
+        create: "GET",
+        edit: "GET",
+        save: "POST",
+        update: "POST",
+        remove: "GET",
+        restore: "GET",
+        confirm: "GET"]
+
     def index() {
         def paymentList = paymentService.getPayments(params.deleted)
 
@@ -33,19 +43,16 @@ class PaymentController {
     }
 
     def create() {
+        render(view: "create")
+    }
 
-        if(request.method == "GET"){
-            render(view: "create")
-            response.status = 200
-            return
-        }
-        
-        if(request.method != "POST"){
-            response.status = 405
-            render([erro: "Método não permitido"] as JSON)
-            return
-        }
+    def edit() {
+        def payment = Payment.get(params.id)
+        response.status=200
+        render(view: "edit", model: [payment: payment])
+    }
 
+    def save() {
         def customerId = params.customer_id
         def payerId = params.payer_id
         def paymentType = params.payment_type
@@ -76,25 +83,13 @@ class PaymentController {
         redirect(action: "show", id: payment.id)
     }
 
-    def edit() {
-
-        if(request.method != "GET" && request.method != "POST"){
-            response.status = 405
-            render([erro: "Método não permitido"] as JSON)
-            return
-        }
-
+    def update() {
         if(!params.id){
             response.status = 400
             render([erro: "O parâmetro id está faltando"] as JSON)
         }
 
-        if(request.method == "GET"){
-            def payment = Payment.get(params.id)
-            response.status=200
-            render(view: "edit", model: [payment: payment])
-            return
-        }
+        println(params)
         
         def payment = paymentService.editPayment(params.id, params.value, params.due_date)
 
@@ -102,8 +97,8 @@ class PaymentController {
             response.status = 400
             render([erro: "O pagamento não pôde ser editado"] as JSON)
         }
-        
-        redirect(view: "show", model: [payment: payment])
+
+        redirect(action: "show", id: payment.id)
     }
 
     def remove() {
