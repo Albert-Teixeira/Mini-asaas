@@ -10,5 +10,4 @@ class CustomerSpec extends Specification implements DomainUnitTest<Customer> {
 
     def cleanup() {
     }
-
 }

@@ -1,5 +1,7 @@
 package com.asaas.mini.utils
 
+import com.asaas.mini.utils.BaseEntity
+
 abstract class BasePersonalData extends BaseEntity {
 
     String name

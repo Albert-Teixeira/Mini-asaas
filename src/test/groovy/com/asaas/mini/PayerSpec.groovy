@@ -10,5 +10,4 @@ class PayerSpec extends Specification implements DomainUnitTest<Payer> {
 
     def cleanup() {
     }
-
 }

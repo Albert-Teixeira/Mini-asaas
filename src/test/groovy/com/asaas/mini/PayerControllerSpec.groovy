@@ -219,9 +219,3 @@ class PayerControllerSpec extends Specification implements ControllerUnitTest<Pa
         flash.message != null
     }
 }
-
-
-
-
-
-
