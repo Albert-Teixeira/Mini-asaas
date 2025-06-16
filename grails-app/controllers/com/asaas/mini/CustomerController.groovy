@@ -1,5 +1,6 @@
 package com.asaas.mini
 
+
 import grails.validation.ValidationException
 import static org.springframework.http.HttpStatus.*
 
@@ -15,32 +16,34 @@ class CustomerController {
     }
 
     def show(Long id) {
-        respond customerService.get(id)
+        Customer customer = customerService.get(id)
+        println "Loaded from DB for show: ${customer?.properties}"
+        respond customer ?: notFound()
     }
 
     def create() {
         respond new Customer(params)
     }
 
-    def save(Customer customer) {
-        if (customer == null) {
-            notFound()
-            return
-        }
+    def save() {
+        try{
+            Customer customer = customerService.save(params)
 
-        try {
-            customerService.save(customer)
-        } catch (ValidationException e) {
-            respond customer.errors, view:'create'
-            return
-        }
-
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.created.message', args: [message(code: 'customer.label', default: 'Customer'), customer.id])
-                redirect customer
+            request.withFormat {
+                form multipartForm {
+                    flash.message = message(code: 'default.created.message', args: [message(code: 'customer.label', default: 'Customer'), customer.id])
+                    redirect customer
+                }
+                '*' { respond customer, [status: CREATED] }
             }
-            '*' { respond customer, [status: CREATED] }
+        } catch (ValidationException e) {
+            flash.message = "Validation Error: ${e.message}"
+            respond customer, view:'create'
+            return
+        } catch (Exception e) {
+            flash.message = "Error saving customer: ${e.message}"
+            respond customer, view:'create'
+            return
         }
     }
 
@@ -48,25 +51,31 @@ class CustomerController {
         respond customerService.get(id)
     }
 
-    def update(Customer customer) {
-        if (customer == null) {
-            notFound()
-            return
-        }
+    def update() {
 
-        try {
-            customerService.save(customer)
-        } catch (ValidationException e) {
-            respond customer.errors, view:'edit'
-            return
-        }
+        println "Params for update: ${params}"
 
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.updated.message', args: [message(code: 'customer.label', default: 'Customer'), customer.id])
-                redirect customer
+        try{
+            Customer customer = customerService.update(Customer.get(params.id), params)
+
+            println "CustomerController.update() - Customer updated successfully: ${customer?.properties}"
+            println "CustomerController.update() - Has errors: ${customer.hasErrors()}"
+
+            request.withFormat {
+                form multipartForm {
+                    flash.message = message(code: 'default.updated.message', args: [message(code: 'customer.label', default: 'Customer'), customer.id])
+                    redirect customer
+                }
+                '*'{ respond customer, [status: OK] }
             }
-            '*'{ respond customer, [status: OK] }
+        } catch (ValidationException e) {
+            flash.message = "Validation Error: ${e.message}"
+            respond customer, view:'edit'
+            return
+        } catch (Exception e) {
+            flash.message = "Error updating customer: ${e.message}"
+            respond customer, view:'edit'
+            return
         }
     }
 
@@ -76,14 +85,32 @@ class CustomerController {
             return
         }
 
-        customerService.delete(id)
+        try{
+            customerService.delete(id)
 
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.deleted.message', args: [message(code: 'customer.label', default: 'Customer'), id])
-                redirect action:"index", method:"GET"
+            request.withFormat {
+                form multipartForm {
+                    flash.message = message(code: 'default.deleted.message', args: [message(code: 'customer.label', default: 'Customer'), id])
+                    redirect action:"index", method:"GET"
+                }
+                '*'{ render status: NO_CONTENT }
             }
-            '*'{ render status: NO_CONTENT }
+        } catch (Exception e) {
+            flash.message = e.message
+            request.withFormat {
+                form multipartForm {
+                    redirect action: "index", method: "GET"
+                }
+                '*'{ render status: NOT_FOUND }
+            }
+        } catch (IllegalArgumentException e) {
+            flash.message = "Invalid ID: ${e.message}"
+            request.withFormat {
+                form multipartForm {
+                    redirect action: "index", method: "GET"
+                }
+                '*'{ render status: BAD_REQUEST }
+            }
         }
     }
 
