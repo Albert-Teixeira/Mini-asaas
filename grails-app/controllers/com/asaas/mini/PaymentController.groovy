@@ -19,7 +19,6 @@ class PaymentController {
     def index() {
         def paymentList = paymentService.getPayments(params.deleted)
 
-        response.status = 200
         render(view: "index", model: [paymentList: paymentList, statusType: StatusType, deleted: params.deleted])
     }
 
@@ -38,7 +37,6 @@ class PaymentController {
             return
         }
 
-        response.status = 200
         render(view: "show", model: [payment: payment, statusType: StatusType])
     }
 
@@ -48,7 +46,7 @@ class PaymentController {
 
     def edit() {
         def payment = Payment.get(params.id)
-        response.status=200
+
         render(view: "edit", model: [payment: payment])
     }
 
@@ -116,7 +114,6 @@ class PaymentController {
             render([erro: "O pagamento não pôde ser deletado"] as JSON)
         }
         
-        response.status = 200
         redirect(action: "index")
     }
 
@@ -140,7 +137,6 @@ class PaymentController {
             render([erro: "O pagamento não pôde ser restaurado"] as JSON)
         }
         
-        response.status = 200
         render(view: "show", model: [payment: payment, statusType: StatusType])
     }
 
@@ -159,7 +155,6 @@ class PaymentController {
             render([erro: "O pagamento não pôde ser confirmado"] as JSON)
         }
         
-        response.status = 200
         redirect(action: "show", id: params.id)
     }
 }
