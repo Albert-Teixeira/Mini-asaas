@@ -9,6 +9,6 @@ class ExpirePaymentJob {
     }
 
     def execute() {
-        paymentService.expirePayments()
+      paymentService.checkExpiredPayments()
     }
 }

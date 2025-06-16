@@ -184,13 +184,22 @@ class PaymentService {
         return true
     }
 
-    void expirePayments(){
-        List<Payment> payments = Payment.getAll()
+    void expirePayment(Payment payment){
+        payment.status = StatusType.VENCIDA
+    }
+
+    void checkExpiredPayments(){
         Date today = new Date()
-        for(int i = 0; i < payments.size(); i++){
-            if(payments[i].dueDate.before(today) && payments[i].status == StatusType.PENDENTE){
-                payments[i].status = StatusType.VENCIDA
+
+        List<Payment> paymentList = Payment.createCriteria().list {
+            le("dueDate", today)
+            and {
+                like("status", StatusType.PENDENTE)
             }
+        }
+
+        for(int i = 0; i < paymentList.size(); i++){
+            this.expirePayment(paymentList[i])
         }
     }
 }
