@@ -89,9 +89,9 @@ class PaymentController {
             render([erro: "O parâmetro id está faltando"] as JSON)
         }
 
-        println(params)
-        
-        def payment = paymentService.editPayment(params.id, params.value, params.due_date)
+        Payment payment = Payment.get(params.id)
+      
+        payment = paymentService.editPayment(payment, params.value, params.due_date)
 
         if(!payment){
             response.status = 400
@@ -107,7 +107,9 @@ class PaymentController {
             render([erro: "O parâmetro id está faltando"] as JSON)
         }
 
-        Boolean deleted = paymentService.deletePayment(params.id)
+        Payment payment = Payment.get(params.id)
+
+        Boolean deleted = paymentService.deletePayment(payment)
 
         if(!deleted){
             response.status = 400
@@ -124,13 +126,13 @@ class PaymentController {
             render([erro: "O parâmetro id está faltando"] as JSON)
         }
 
-        def payment
+        Payment payment = Payment.get(params.id)
 
         if(!params.due_date){
-            payment = paymentService.restorePayment(params.id)
+            payment = paymentService.restorePayment(payment)
         }
         else{
-            payment = paymentService.restorePayment(params.id,params.due_date)
+            payment = paymentService.restorePayment(payment,params.due_date)
         }
 
         if(!payment){
@@ -148,7 +150,9 @@ class PaymentController {
             render([erro: "O parâmetro id está faltando"] as JSON)
         }
 
-        Boolean confirmed = paymentService.confirmPayment(params.id)
+        Payment payment = Payment.get(params.id)
+
+        Boolean confirmed = paymentService.confirmPayment(payment)
 
         if(!confirmed){
             response.status = 400

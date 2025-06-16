@@ -89,8 +89,7 @@ class PaymentService {
         return payments
     }
 
-    def editPayment(id, value, dueDate) {
-        def payment = Payment.get(id)
+    def editPayment(payment, value, dueDate) {
 
         def sanitizedValue = Double.parseDouble(value)
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
@@ -113,9 +112,7 @@ class PaymentService {
         return payment
     }
 
-    def deletePayment(id) {
-        def payment = Payment.get(id)
-
+    def deletePayment(payment) {
         if(payment.deleted == true){
             return false
         }
@@ -137,9 +134,7 @@ class PaymentService {
         return true
     }
 
-    def restorePayment(id,dueDate = null) {
-        def payment = Payment.get(id)
-
+    def restorePayment(payment,dueDate = null) {
         if(payment.deleted == false){
             return null
         }
@@ -173,9 +168,7 @@ class PaymentService {
         return payment
     }
 
-    def confirmPayment(id){
-        def payment = Payment.get(id)
-
+    def confirmPayment(payment){
         if(payment.deleted){
             return false
         }
