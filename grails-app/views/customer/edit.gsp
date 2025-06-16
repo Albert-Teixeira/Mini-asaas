@@ -44,7 +44,7 @@
                 </g:eachError>
             </ul>
             </g:hasErrors>
-            <g:form resource="${this.customer}" method="PUT">
+            <g:form resource="${this.customer}" method="POST">
                 <g:hiddenField name="version" value="${this.customer?.version}" />
                 <fieldset class="form">
                     <f:all bean="customer"/>
