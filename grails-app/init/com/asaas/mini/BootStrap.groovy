@@ -40,7 +40,7 @@ class BootStrap {
             value: 45.55,
             status: StatusType.PENDENTE,
             dueDate: new Date(),
-            dateReceived: new Date())
+            dateReceived: null)
         
         payment.save()
 
@@ -51,7 +51,7 @@ class BootStrap {
             value: 250,
             status: StatusType.PENDENTE,
             dueDate: new Date(),
-            dateReceived: new Date())
+            dateReceived: null)
         
         payment.save()
     }

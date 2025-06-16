@@ -183,4 +183,14 @@ class PaymentService {
 
         return true
     }
+
+    void expirePayments(){
+        List<Payment> payments = Payment.getAll()
+        Date today = new Date()
+        for(int i = 0; i < payments.size(); i++){
+            if(payments[i].dueDate.before(today) && payments[i].status == StatusType.PENDENTE){
+                payments[i].status = StatusType.VENCIDA
+            }
+        }
+    }
 }
