@@ -198,8 +198,8 @@ class PaymentService {
             }
         }
 
-        for(int i = 0; i < paymentList.size(); i++){
-            this.expirePayment(paymentList[i])
+        for (Payment payment in paymentList) {
+            expirePayment(payment)
         }
     }
 }
