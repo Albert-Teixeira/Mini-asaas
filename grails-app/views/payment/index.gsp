@@ -6,7 +6,7 @@
         <title>Listar Cobranças</title>
     </head>
     <body>
-        <g:if test="${ deleted == "1" }">
+        <g:if test="${ deleted }">
            <a href="${createLink(action:"index")}">Voltar</a>
         </g:if>
         <g:else>
@@ -27,7 +27,6 @@
                 </g:if>
                 <g:elseif test="${ payment.status == statusType.ARQUIVADA }">
                     <a href="${createLink(action:"show",id:"${payment.id}")}">Acessar pagamento</a>
-                    <a href="${createLink(action:"restore",id:"${payment.id}")}">Restaurar pagamento</a>
                 </g:elseif>
                 <g:else>
                     <a href="${createLink(action:"show",id:"${payment.id}")}">Acessar pagamento</a>
@@ -38,7 +37,7 @@
                 <p>-----------------------------------------------------------</p>
             </div>
         </g:each>
-        <g:if test="${ deleted != "1" }">
+        <g:if test="${ !deleted }">
             <a href="${createLink(action:"create")}">Criar novo pagamento</a>
         </g:if>
     </body>

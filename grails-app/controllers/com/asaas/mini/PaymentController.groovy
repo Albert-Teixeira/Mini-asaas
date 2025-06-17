@@ -17,9 +17,12 @@ class PaymentController {
         confirm: "GET"]
 
     def index() {
-        def paymentList = paymentService.getPayments(params.deleted)
 
-        render(view: "index", model: [paymentList: paymentList, statusType: StatusType, deleted: params.deleted])
+        Boolean deleted = (params.deleted == "1")
+
+        def paymentList = paymentService.getPayments(deleted)
+
+        render(view: "index", model: [paymentList: paymentList, statusType: StatusType, deleted: deleted])
     }
 
     def show() {
@@ -29,7 +32,7 @@ class PaymentController {
             return
         }
 
-        def payment = paymentService.getPaymentById(params.id)
+        def payment = Payment.get(params.id)
 
         if(!payment){
             response.status = 404
@@ -115,29 +118,6 @@ class PaymentController {
         }
         
         redirect(action: "index")
-    }
-
-    def restore() {
-        if(!params.id){
-            response.status = 400
-            render([erro: "O parâmetro id está faltando"] as JSON)
-        }
-
-        Payment payment = Payment.get(params.id)
-
-        if(!params.due_date){
-            payment = paymentService.restorePayment(payment)
-        }
-        else{
-            payment = paymentService.restorePayment(payment,params.due_date)
-        }
-
-        if(!payment){
-            response.status = 400
-            render([erro: "O pagamento não pôde ser restaurado"] as JSON)
-        }
-        
-        render(view: "show", model: [payment: payment, statusType: StatusType])
     }
 
     def confirm() {

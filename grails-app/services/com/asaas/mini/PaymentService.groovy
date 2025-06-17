@@ -39,8 +39,8 @@ class PaymentService {
         return payment
     }
 
-    def getPayments(deleted) {
-        if(deleted == "1"){
+    def getPayments(Boolean deleted) {
+        if(deleted){
             def payments = Payment.findAllByDeleted(true)
             return payments
         }
@@ -50,15 +50,7 @@ class PaymentService {
         return payments
     }
 
-    def getPaymentById(id) {
-        def payment = Payment.get(id)
-
-        return payment
-    }
-
-    def getPaymentsByCustomer(customerId) {
-        def customer = Customer.get(customerId)
-
+    def getPaymentsByCustomer(Customer customer) {
         def payments = Payment.findAll {
             customer == customer
         }
@@ -66,8 +58,7 @@ class PaymentService {
         return payments
     }
 
-    def getPaymentsByPayer(payerId) {
-        def payer = Payment.get(payerId)
+    def getPaymentsByPayer(Payer payer) {
 
         def payments = Payment.findAll {
             payer == payer
@@ -76,11 +67,7 @@ class PaymentService {
         return payments
     }
 
-    def getPaymentsByCustomerAndPayer(customerId, payerId) {
-        def customer = Customer.get(customerId)
-        
-        def payer = Payment.get(payerId)
-
+    def getPaymentsByCustomerAndPayer(Customer customer, Payer payer) {
         def payments = Payment.findAll {
             customer == customer
             payer == payer
@@ -132,40 +119,6 @@ class PaymentService {
         }
 
         return true
-    }
-
-    def restorePayment(payment,dueDate = null) {
-        if(payment.deleted == false){
-            return null
-        }
-
-        if(payment.status == StatusType.RECEBIDA){
-            return null
-        }
-
-        if(payment.status == StatusType.VENCIDA && !dueDate){
-            return null
-        }
-
-        Date today = new Date()
-        if(dueDate && dueDate.before(today)){
-            return null
-        }
-
-        try {
-            if(payment.status != StatusType.RECEBIDA) {
-                payment.status = StatusType.PENDENTE
-            }
-            if(dueDate){
-                payment.dueDate = dueDate
-            }
-            payment.deleted = false
-        } catch(Exception e){
-            println(e.getMessage())
-            return null
-        }
-
-        return payment
     }
 
     def confirmPayment(payment){
