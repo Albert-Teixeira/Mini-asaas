@@ -38,13 +38,13 @@ class PaymentService {
         return payments
     }
 
-    Payment getPaymentById(int id) {
+    Payment getPaymentById(Integer id) {
         Payment payment = Payment.get(id)
 
         return payment
     }
 
-    List<Payment> getPaymentsByCustomer(int customerId) {
+    List<Payment> getPaymentsByCustomer(Integer customerId) {
         Customer customer = Customer.get(customerId)
 
         List<Payment> payments = Payment.findAll {
@@ -54,7 +54,7 @@ class PaymentService {
         return payments
     }
 
-    List<Payment> getPaymentsByPayer(int payerId) {
+    List<Payment> getPaymentsByPayer(Integer payerId) {
         Payer payer = Payment.get(payerId)
 
         List<Payment> payments = Payment.findAll {
@@ -64,7 +64,7 @@ class PaymentService {
         return payments
     }
 
-    List<Payment> getPaymentsByCustomerAndPayer(int customerId, int payerId) {
+    List<Payment> getPaymentsByCustomerAndPayer(Integer customerId, Integer payerId) {
         Customer customer = Customer.get(customerId)
         
         Payer payer = Payment.get(payerId)
@@ -77,7 +77,7 @@ class PaymentService {
         return payments
     }
 
-    Payment editPayment(int id, Double value, Date dueDate) {
+    Payment editPayment(Integer id, Double value, Date dueDate) {
         Payment payment = Payment.get(id)
 
         try {
@@ -92,7 +92,7 @@ class PaymentService {
         return payment
     }
 
-    Boolean deletePayment(int id) {
+    Boolean deletePayment(Integer id) {
         Payment payment = Payment.get(id)
 
         if(payment.deleted == true){
@@ -118,7 +118,7 @@ class PaymentService {
         return true
     }
 
-    Payment restorePayment(int id, Date dueDate = null) {
+    Payment restorePayment(Integer id, Date dueDate = null) {
         Payment payment = Payment.get(id)
 
         if(payment.deleted == false){
@@ -155,7 +155,7 @@ class PaymentService {
         return payment
     }
 
-    Boolean confirmPayment(int id){
+    Boolean confirmPayment(Integer id){
         Payment payment = Payment.get(id)
 
         if(payment.deleted){

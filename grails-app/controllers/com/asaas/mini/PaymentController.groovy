@@ -23,7 +23,7 @@ class PaymentController {
             return
         }
 
-        int id = Integer.parseInt(params.id)
+        Integer id = Integer.parseInt(params.id)
 
         Payment payment = paymentService.getPaymentById(id)
 
@@ -51,8 +51,8 @@ class PaymentController {
             return
         }
 
-        int customerId = Integer.parseInt(params.customer_id)
-        int payerId = Integer.parseInt(params.payer_id)
+        Integer customerId = Integer.parseInt(params.customer_id)
+        Integer payerId = Integer.parseInt(params.payer_id)
         PaymentType paymentType = PaymentType.valueOf(params.payment_type)
         Double value = Double.parseDouble(params.value)
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
@@ -106,7 +106,7 @@ class PaymentController {
             return
         }
 
-        int id = Integer.parseInt(params.id)
+        Integer id = Integer.parseInt(params.id)
         Double value = Double.parseDouble(params.value)
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm")
         Date dueDate = format.parse(params.due_date)
@@ -127,7 +127,7 @@ class PaymentController {
             render([error: "missing parameter id"] as JSON)
         }
 
-        int id = Integer.parseInt(params.id)
+        Integer id = Integer.parseInt(params.id)
 
         Boolean deleted = paymentService.deletePayment(id)
 
@@ -149,7 +149,7 @@ class PaymentController {
 
         Payment payment
 
-        int id = Integer.parseInt(params.id)
+        Integer id = Integer.parseInt(params.id)
 
         if(!params.due_date){
             payment = paymentService.restorePayment(id)
@@ -176,7 +176,7 @@ class PaymentController {
             render([error: "missing parameter id"] as JSON)
         }
 
-        int id = Integer.parseInt(params.id)
+        Integer id = Integer.parseInt(params.id)
 
         Boolean confirmed = paymentService.confirmPayment(id)
 
