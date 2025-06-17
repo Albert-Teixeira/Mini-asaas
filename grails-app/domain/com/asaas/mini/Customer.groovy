@@ -1,8 +1,8 @@
 package com.asaas.mini
 
-import com.asaas.mini.utils.BasePersonalData
+import com.asaas.mini.utils.BaseEntity
 
-class Customer extends BasePersonalData {
+class Customer extends BaseEntity {
 
     static constraints = {
         name blank: false, maxSize: 100

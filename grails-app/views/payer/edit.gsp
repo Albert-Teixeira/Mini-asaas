@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta name="layout" content="main" />
-        <g:set var="entityName" value="${message(code: 'payer.label', default: 'Pagante')}" />
+        <g:set var="entityName" value="${message(code: 'payer.label', default: 'Payer')}" />
         <title>
             <g:message code="default.edit.label" args="[entityName]" />
         </title>
@@ -56,7 +56,7 @@
                     <f:all bean="payer"/>
                 </fieldset>
                 <fieldset class="buttons">
-                    <input class="save" type="submit" value="${message(code: 'default.button.update.label', default: 'Alterar')}" />
+                    <input class="save" type="submit" value="${message(code: 'default.button.update.label', default: 'Update')}" />
                 </fieldset>
             </g:form>
         </div>
