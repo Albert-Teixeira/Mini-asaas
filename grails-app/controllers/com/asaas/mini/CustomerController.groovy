@@ -1,6 +1,4 @@
 package com.asaas.mini
-
-
 import grails.validation.ValidationException
 import static org.springframework.http.HttpStatus.*
 
@@ -17,7 +15,6 @@ class CustomerController {
 
     def show(Long id) {
         Customer customer = customerService.get(id)
-        println "Loaded from DB for show: ${customer?.properties}"
         respond customer ?: notFound()
     }
 
@@ -37,11 +34,11 @@ class CustomerController {
                 '*' { respond customer, [status: CREATED] }
             }
         } catch (ValidationException e) {
-            flash.message = "Validation Error: ${e.message}"
+            flash.message = "Erro de validação: ${e.message}"
             respond customer, view:'create'
             return
         } catch (Exception e) {
-            flash.message = "Error saving customer: ${e.message}"
+            flash.message = "Erro ao salvar cliente: ${e.message}"
             respond customer, view:'create'
             return
         }
@@ -53,13 +50,8 @@ class CustomerController {
 
     def update() {
 
-        println "Params for update: ${params}"
-
         try{
             Customer customer = customerService.update(Customer.get(params.id), params)
-
-            println "CustomerController.update() - Customer updated successfully: ${customer?.properties}"
-            println "CustomerController.update() - Has errors: ${customer.hasErrors()}"
 
             request.withFormat {
                 form multipartForm {
@@ -69,11 +61,11 @@ class CustomerController {
                 '*'{ respond customer, [status: OK] }
             }
         } catch (ValidationException e) {
-            flash.message = "Validation Error: ${e.message}"
+            flash.message = "Erro de validação: ${e.message}"
             respond customer, view:'edit'
             return
         } catch (Exception e) {
-            flash.message = "Error updating customer: ${e.message}"
+            flash.message = "Erro ao atualizar cliente: ${e.message}"
             respond customer, view:'edit'
             return
         }

@@ -19,8 +19,9 @@ class CustomerService {
         customer.state = params.state
         customer.city = params.city
         customer.street = params.street
-        customer.houseNumber = params.houseNumber as Integer
+        customer.addressNumber = params.addressNumber as Integer
         customer.postalCode = params.postalCode
+        customer.complement = params.complement ?: null
 
         if (!customer.validate()) {
             throw new ValidationException("Invalid customer data", customer.errors)
@@ -52,8 +53,9 @@ class CustomerService {
         customer.state = params.state
         customer.city = params.city
         customer.street = params.street
-        customer.houseNumber = params.houseNumber as Integer
+        customer.addressNumber = params.addressNumber as Integer
         customer.postalCode = params.postalCode
+        customer.complement = params.complement ?: null
         
         if (!customer.validate()) {
             throw new ValidationException("Invalid customer data", customer.errors)
