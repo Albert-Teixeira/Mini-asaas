@@ -21,11 +21,12 @@
                 <p>Status: ${payment.status}</p>
                 <p>Data de vencimento: ${payment.dueDate}</p>
                 <p>Data de recebimento: ${payment.dateReceived}</p>
+                <p>Deleted: ${payment.deleted}</p>
 
                 <g:if test="${ payment.status == statusType.RECEBIDA }">
                     <a href="${createLink(action:"show",id:"${payment.id}")}">Acessar pagamento</a>
                 </g:if>
-                <g:elseif test="${ payment.status == statusType.ARQUIVADA }">
+                <g:elseif test="${ payment.deleted }">
                     <a href="${createLink(action:"show",id:"${payment.id}")}">Acessar pagamento</a>
                     <a href="${createLink(action:"restore",id:"${payment.id}")}">Restaurar pagamento</a>
                 </g:elseif>

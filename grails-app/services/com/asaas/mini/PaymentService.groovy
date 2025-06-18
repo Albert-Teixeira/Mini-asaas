@@ -105,14 +105,8 @@ class PaymentService {
         }
 
         try {
-            if(payment.status == StatusType.VENCIDA || payment.status == StatusType.RECEBIDA){
-                payment.deleted = true
-            }
-            else{
-                payment.deleted = true
-                payment.status = StatusType.ARQUIVADA
-            }
-            payment.save(failOnError: true)
+            payment.deleted = true
+            payment.save(flush: true, failOnError: true)
         } catch (Exception e) {
             println(e.getMessage())
             return false
