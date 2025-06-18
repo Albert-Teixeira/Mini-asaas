@@ -4,6 +4,7 @@
 grails.plugin.springsecurity.userLookup.userDomainClassName = 'com.asaas.mini.User'
 grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'com.asaas.mini.UserRole'
 grails.plugin.springsecurity.authority.className = 'com.asaas.mini.Role'
+grails.plugin.springsecurity.logout.postOnly = false
 grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 	[pattern: '/',               access: ['permitAll']],
 	[pattern: '/error',          access: ['permitAll']],
@@ -15,7 +16,8 @@ grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 	[pattern: '/**/css/**',      access: ['permitAll']],
 	[pattern: '/**/images/**',   access: ['permitAll']],
 	[pattern: '/**/favicon.ico', access: ['permitAll']],
-	[pattern: '/h2-console/**', access: ['permitAll']]
+	[pattern: '/h2-console/**', access: ['permitAll']],
+	[pattern: '/register/**', access: ['permitAll']]
 ]
 
 grails.plugin.springsecurity.filterChain.chainMap = [

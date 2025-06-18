@@ -11,6 +11,8 @@ class User implements Serializable {
 
     private static final long serialVersionUID = 1
 
+    Customer customer
+
     String username
     String password
     boolean enabled = true
@@ -23,6 +25,7 @@ class User implements Serializable {
     }
 
     static constraints = {
+        customer nullable: true, blank: true
         password nullable: false, blank: false, password: true
         username nullable: false, blank: false, unique: true
     }
