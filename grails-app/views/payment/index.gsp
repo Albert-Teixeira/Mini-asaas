@@ -27,6 +27,7 @@
                 </g:if>
                 <g:elseif test="${ payment.status == statusType.ARQUIVADA }">
                     <a href="${createLink(action:"show",id:"${payment.id}")}">Acessar pagamento</a>
+                    <a href="${createLink(action:"restore",id:"${payment.id}")}">Restaurar pagamento</a>
                 </g:elseif>
                 <g:else>
                     <a href="${createLink(action:"show",id:"${payment.id}")}">Acessar pagamento</a>

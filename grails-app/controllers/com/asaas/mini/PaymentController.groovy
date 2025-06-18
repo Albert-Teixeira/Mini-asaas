@@ -120,6 +120,29 @@ class PaymentController {
         redirect(action: "index")
     }
 
+    def restore() {
+        if(!params.id){
+            response.status = 400
+            render([erro: "O parâmetro id está faltando"] as JSON)
+        }
+
+        Payment payment = Payment.get(params.id)
+
+        if(!params.due_date){
+            payment = paymentService.restorePayment(payment)
+        }
+        else{
+            payment = paymentService.restorePayment(payment,params.due_date)
+        }
+
+        if(!payment){
+            response.status = 400
+            render([erro: "O pagamento não pôde ser restaurado"] as JSON)
+        }
+
+        render(view: "show", model: [payment: payment, statusType: StatusType])
+    }
+
     def confirm() {
         if(!params.id){
             response.status = 400

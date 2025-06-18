@@ -121,6 +121,40 @@ class PaymentService {
         return true
     }
 
+    def restorePayment(payment,dueDate = null) {
+        if(payment.deleted == false){
+            return null
+        }
+
+        if(payment.status == StatusType.RECEBIDA){
+            return null
+        }
+
+        if(payment.status == StatusType.VENCIDA && !dueDate){
+            return null
+        }
+
+        Date today = new Date()
+        if(dueDate && dueDate.before(today)){
+            return null
+        }
+
+        try {
+            if(payment.status != StatusType.RECEBIDA) {
+                payment.status = StatusType.PENDENTE
+            }
+            if(dueDate){
+                payment.dueDate = dueDate
+            }
+            payment.deleted = false
+        } catch(Exception e){
+            println(e.getMessage())
+            return null
+        }
+
+        return payment
+    }
+
     def confirmPayment(payment){
         if(payment.deleted){
             return false
