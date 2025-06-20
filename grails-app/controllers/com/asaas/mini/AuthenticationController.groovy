@@ -1,10 +1,10 @@
 package com.asaas.mini
 
-class RegisterController {
+class AuthenticationController {
 
     static allowedMethods = [index: "GET", save: "POST"]
 
-    RegisterService registerService
+    AuthenticationService authenticationService
 
     def index() {
         render(view: "index")
@@ -43,7 +43,7 @@ class RegisterController {
             postalCode: postalCode)
 
         try {
-            user = registerService.registerUserAndAccount(email, password, customer)
+            user = authenticationService.registerUserAndCustomer(email, password, customer)
         } catch (Exception e) {
             println(e.getMessage())
             request.status = 500

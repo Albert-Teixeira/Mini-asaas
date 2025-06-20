@@ -3,9 +3,9 @@ package com.asaas.mini
 import grails.gorm.transactions.Transactional
 
 @Transactional
-class RegisterService {
+class AuthenticationService {
 
-    User registerUserAndAccount(String username, String password, Customer customer) {
+    User registerUserAndCustomer(String username, String password, Customer customer) {
         Role userRole = Role.get(1)
         User user = new User(username: username, password: password, customer: customer).save()
         if(!user){

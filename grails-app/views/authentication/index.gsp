@@ -6,7 +6,7 @@
         <title>Minha conta</title>
     </head>
     <body>
-        <g:form name="registerForm" url="[controller:'register',action:'save']">
+        <g:form name="registerForm" url="[controller:'authentication',action:'save']">
             <label>Email:</label>
             <g:field type="email" name="email"/><br>
 
