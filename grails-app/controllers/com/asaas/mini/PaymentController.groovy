@@ -32,7 +32,6 @@ class PaymentController {
             return
         }
 
-        response.status = 200
         render(view: "show", model: [payment: payment, statusType: StatusType])
     }
 
@@ -115,7 +114,6 @@ class PaymentController {
             render([erro: "O pagamento não pôde ser deletado"] as JSON)
         }
         
-        response.status = 200
         redirect(action: "index")
     }
 
@@ -143,7 +141,6 @@ class PaymentController {
             render([erro: "O pagamento não pôde ser restaurado"] as JSON)
         }
         
-        response.status = 200
         render(view: "show", model: [payment: payment, statusType: StatusType])
     }
 
@@ -162,7 +159,6 @@ class PaymentController {
             render([erro: "O pagamento não pôde ser confirmado"] as JSON)
         }
         
-        response.status = 200
         redirect(action: "show", id: params.id)
     }
 }
