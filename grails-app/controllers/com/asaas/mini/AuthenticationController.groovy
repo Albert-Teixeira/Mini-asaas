@@ -68,6 +68,31 @@ class AuthenticationController {
 
     @Secured('ROLE_OWNER')
     def invite() {
+        if(!params.email){
+            render "Falta o parâmetro email"
+            request.status = 400
+            return
+        }
+
+        User owner = getAuthenticatedUser()
+        Customer accountOwner = owner.customer
+
+        Invitation invitation = new Invitation(customer=customer,
+            expired=false)
+        
+        //send email with invitation object to email service and in email service send email to user with link /authentication/invitation
+
+        render "convite enviado"
+    }
+
+    def invitation() {
+        if(!params.id){
+            render "Convite inválido"
+            request.status = 400
+            return
+        }
+
+        Integer id = Integer.parseInt(params.id)
 
         User owner = getAuthenticatedUser()
         Customer accountOwner = owner.customer
