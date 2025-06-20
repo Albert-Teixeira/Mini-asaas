@@ -9,7 +9,7 @@ class AuthenticationService {
         Role userRole = Role.get(1)
         User user = new User(username: username, password: password, customer: customer).save()
         if(!user){
-            throw new IllegalArgumentException("Esse email já está em uso")
+            throw new IllegalArgumentException("Este email já está em uso")
         }
         UserRole.create user, userRole
 
@@ -19,5 +19,13 @@ class AuthenticationService {
         }
 
         return user
+    }
+
+    List<User> getUsersByCustomerAccount(Customer customer){
+        List<User> userList = User.findAll {
+            customer == customer
+        }
+
+        return userList
     }
 }

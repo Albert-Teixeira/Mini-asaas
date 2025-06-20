@@ -1,8 +1,9 @@
 package com.asaas.mini
+import grails.plugin.springsecurity.annotation.Secured
 
 class AuthenticationController {
 
-    static allowedMethods = [index: "GET", save: "POST"]
+    static allowedMethods = [index: "GET", save: "POST", manage: "GET", invite: "POST"]
 
     AuthenticationService authenticationService
 
@@ -52,5 +53,25 @@ class AuthenticationController {
         }
 
         render "Usuário '${user.username}' cadastrado com sucesso"
+    }
+
+    @Secured('ROLE_OWNER')
+    def manage() {
+
+        User owner = getAuthenticatedUser()
+        Customer accountOwner = owner.customer
+
+        List<User> accountUserList = authenticationService.getUsersByCustomerAccount(accountOwner)
+
+        render(view: "manage", model: [accountUserList: accountUserList])
+    }
+
+    @Secured('ROLE_OWNER')
+    def invite() {
+
+        User owner = getAuthenticatedUser()
+        Customer accountOwner = owner.customer
+
+        render "convite enviado"
     }
 }
