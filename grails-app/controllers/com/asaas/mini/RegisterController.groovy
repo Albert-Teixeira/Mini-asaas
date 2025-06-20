@@ -19,7 +19,7 @@ class RegisterController {
         String state = params.state
         String city = params.city
         String street = params.street
-        Integer houseNumber = Integer.parseInt(params.houseNumber)
+        Integer addressNumber = Integer.parseInt(params.addressNumber)
         String postalCode = params.postalCode
         String password = params.password
         String password2 = params.password2
@@ -31,10 +31,19 @@ class RegisterController {
         }
 
         User user
-        Customer customer = new Customer()
+        Customer customer = new Customer(
+            name: name,
+            email: email,
+            phoneNumber: phoneNumber,
+            cpfCnpj: cpfCnpj,
+            state: state,
+            city: city,
+            street: street,
+            houseNumber: addressNumber,
+            postalCode: postalCode)
 
         try {
-            user = registerService.registerUserWithAccount(email, password, customer)
+            user = registerService.registerUserAndAccount(email, password, customer)
         } catch (Exception e) {
             println(e.getMessage())
             request.status = 500

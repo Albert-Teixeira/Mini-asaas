@@ -14,7 +14,7 @@
             <g:field type="text" name="name"/><br>
 
             <label>Telefone:</label>
-            <g:field type="number" name="phoneNumber"/><br>
+            <g:field type="text" name="phoneNumber"/><br>
 
             <label>Cpf ou Cnpj:</label>
             <g:field type="text" name="cpfCnpj"/><br>
