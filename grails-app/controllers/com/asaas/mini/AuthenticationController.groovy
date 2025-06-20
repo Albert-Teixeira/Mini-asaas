@@ -3,7 +3,7 @@ import grails.plugin.springsecurity.annotation.Secured
 
 class AuthenticationController {
 
-    static allowedMethods = [index: "GET", save: "POST", manage: "GET", invite: "POST"]
+    static allowedMethods = [index: "GET", save: "POST", manage: "GET", invite: "POST", invitation: "GET", saveInvitedUser: "POST"]
 
     AuthenticationService authenticationService
 
@@ -77,7 +77,8 @@ class AuthenticationController {
         User owner = getAuthenticatedUser()
         Customer accountOwner = owner.customer
 
-        Invitation invitation = new Invitation(customer=customer,
+        Invitation invitation = new Invitation(email=params.email,
+            customer=customer,
             expired=false)
         
         //send email with invitation object to email service and in email service send email to user with link /authentication/invitation
@@ -88,15 +89,77 @@ class AuthenticationController {
     def invitation() {
         if(!params.id){
             render "Convite inválido"
-            request.status = 400
+            request.status = 404
             return
         }
 
         Integer id = Integer.parseInt(params.id)
 
-        User owner = getAuthenticatedUser()
-        Customer accountOwner = owner.customer
+        Invitation invitation = Invitation.get(id)
 
-        render "convite enviado"
+        if(!invitation){
+            render "Convite inválido"
+            request.status = 404
+            return
+        }
+
+        if(invitation.expired){
+            render "Convite inválido"
+            request.status = 404
+            return
+        }
+
+        render(view: "invitation", model: [id: id])
+    }
+
+    def saveInvitedUser() {
+        if(!params.id){
+            render "Convite inválido"
+            request.status = 404
+            return
+        }
+
+        Integer id = Integer.parseInt(params.id)
+        String password = params.password
+        String password2 = params.password2
+
+        Invitation invitation = Invitation.get(id)
+
+        if(!invitation){
+            render "Convite inválido"
+            request.status = 404
+            return
+        }
+
+        if(invitation.expired){
+            render "Convite inválido"
+            request.status = 404
+            return
+        }
+
+        if(password != password2){
+            render "As senhas devem coincidir"
+            request.status = 400
+            return
+        }
+
+        String email = invitation.email
+        Customer customer = invitation.customer
+        
+        User user
+
+        try {
+            user = authenticationService.registerUserAndCustomer(email, password, customer)
+        } catch (Exception e) {
+            println(e.getMessage())
+            request.status = 500
+            render("Ocorreu um erro ao cadastrar o usuário")
+            return
+        }
+
+        invitation.expired = true
+        invitation.save()
+
+        render "Parabéns '${user.username}', agora você possuir acesso à conta"
     }
 }
