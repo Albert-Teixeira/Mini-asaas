@@ -21,8 +21,6 @@ class PaymentService {
             println(e.getMessage())
             return null
         }
-
-        //To do: notificar cliente
         
         return payment
     }
@@ -96,7 +94,7 @@ class PaymentService {
         Payment payment = Payment.get(id)
 
         if(payment.deleted == true){
-            return false //Cobrança já deletada
+            return false
         }
 
         try {
@@ -113,8 +111,6 @@ class PaymentService {
             return false
         }
 
-        //To do: notificar cliente
-
         return true
     }
 
@@ -122,7 +118,7 @@ class PaymentService {
         Payment payment = Payment.get(id)
 
         if(payment.deleted == false){
-            return null //Cobrança não foi deletada
+            return null
         }
 
         if(payment.status == StatusType.RECEBIDA){
@@ -130,12 +126,12 @@ class PaymentService {
         }
 
         if(payment.status == StatusType.VENCIDA && !dueDate){
-            return null //Cobrança vencida e não foi apresentada uma nova data de vencimento
+            return null
         }
 
         if(dueDate){
             if(dueDate < Date()){
-                return null //Nova data de cobrança menor que a data atual
+                return null
             }
         }
 
@@ -150,8 +146,6 @@ class PaymentService {
             return null
         }
 
-        //To do: Notificar cliente
-
         return payment
     }
 
@@ -159,22 +153,20 @@ class PaymentService {
         Payment payment = Payment.get(id)
 
         if(payment.deleted){
-            return false //Cobrança deletada
+            return false
         }
 
         if(payment.status != StatusType.PENDENTE){
-            return false //Cobrança deve estar pendente
+            return false
         }
 
         try {
-            payment.status = StatusType.RECEBIDA //To do: Add saldo para o cliente depois?
+            payment.status = StatusType.RECEBIDA
             payment.dateReceived = new Date()
         } catch(Exception e) {
             println(e.getMessage())
             return false
         }
-
-        //To do: Notificar cliente
 
         return true
     }

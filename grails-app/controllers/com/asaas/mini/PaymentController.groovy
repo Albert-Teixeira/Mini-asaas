@@ -116,7 +116,6 @@ class PaymentController {
         }
         
         response.status = 200
-        //colocar flash aqui
         redirect(action: "index")
     }
 
@@ -136,7 +135,7 @@ class PaymentController {
         else{
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
             Date dueDate = format.parse(params.due_date);
-            payment = paymentService.restorePayment(id,dueDate) //Caso o pagamento excluido ja tenha vencido e precise de uma renovação
+            payment = paymentService.restorePayment(id,dueDate)
         }
 
         if(!payment){
@@ -145,7 +144,6 @@ class PaymentController {
         }
         
         response.status = 200
-        //flash aqui
         render(view: "show", model: [payment: payment, statusType: StatusType])
     }
 
