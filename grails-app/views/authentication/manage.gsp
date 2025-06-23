@@ -8,7 +8,9 @@
     <body>
         <g:each var="user" in="${ accountUserList }">
             <p>${user.username}</p>
-            <button type="button">Revogar acesso deste usuário</button>
+            <g:form name="invitationForm" action="saveInvitedUser" controller="authentication" id="${id}">
+                <g:actionSubmit value="remover usuário" action="saveInvitedUser"/>
+            </g:form>
             <p>-----------------------</p>
         </g:each>
         <button type="button">Adicione um usuário para acessar a conta</button>

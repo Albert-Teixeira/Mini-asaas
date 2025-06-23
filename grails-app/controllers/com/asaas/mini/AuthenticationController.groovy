@@ -160,6 +160,27 @@ class AuthenticationController {
         invitation.expired = true
         invitation.save()
 
-        render "Parabéns '${user.username}', agora você possuir acesso à conta"
+        render "Parabéns '${user.username}', agora você possui acesso à conta"
+    }
+
+    def removeUser() {
+        if(!params.id){
+            render "Falta o parâmetro id"
+            request.status = 404
+            return
+        }
+
+        Integer id = Integer.parseInt(params.id)
+
+        try {
+            user = authenticationService.registerUserAndCustomer(email, password, customer)
+        } catch (Exception e) {
+            println(e.getMessage())
+            request.status = 500
+            render("Ocorreu um erro ao remover o usuário")
+            return
+        }
+
+        render("Usuário removido com sucesso")
     }
 }
