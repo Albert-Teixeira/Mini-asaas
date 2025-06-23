@@ -13,12 +13,12 @@
             </g:form>
             <p>-----------------------</p>
         </g:each>
-        <button type="button">Adicione um usuário para acessar a conta</button>
         <g:form name="inviteForm" url="[controller:'authentication',action:'invite']">
+            <p>Adicionar usuário</p>
             <label>Email:</label>
             <g:field type="email" name="email"/><br>
 
-            <g:actionSubmit value="submit" action="invite"/>
+            <g:actionSubmit value="Adicionar usuário" action="invite"/>
         </g:form>
     </body>
 </html>
