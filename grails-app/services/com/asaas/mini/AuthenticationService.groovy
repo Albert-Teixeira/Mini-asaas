@@ -22,6 +22,10 @@ class AuthenticationService {
     }
 
     void deleteUser(User user){
+        if(user.getAuthorities()[0].authority == "ROLE_OWNER"){
+            throw new IllegalArgumentException("Não pode deletar o dono")
+        }
+
         Role userRole = Role.get(2)
 
         UserRole.remove user, userRole
