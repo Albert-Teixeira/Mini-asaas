@@ -8,11 +8,21 @@ class PaymentController {
 
     PaymentService paymentService
 
+    static allowedMethods = [index: "GET",
+        show: "GET",
+        create: "GET",
+        edit: "GET",
+        save: "POST",
+        update: "POST",
+        remove: "GET",
+        restore: "GET",
+        confirm: "GET"]
+
     def index() {
         Boolean deleted = (params.deleted == "1")
-        List<Payment> payments = paymentService.getPayments(deleted)
+        List<Payment> paymentList = paymentService.getPayments(deleted)
 
-        render(view: "index", model: [payments: payments, statusType: StatusType, deleted: deleted])
+        render(view: "index", model: [paymentList: paymentList, statusType: StatusType, deleted: deleted])
     }
 
     def show() {
@@ -24,7 +34,7 @@ class PaymentController {
 
         Integer id = Integer.parseInt(params.id)
 
-        Payment payment = paymentService.getPaymentById(id)
+        Payment payment = Payment.get(params.id)
 
         if(!payment){
             response.status = 404
@@ -36,6 +46,16 @@ class PaymentController {
     }
 
     def create() {
+        render(view: "create")
+    }
+
+    def edit() {
+        def payment = Payment.get(params.id)
+
+        render(view: "edit", model: [payment: payment])
+    }
+
+    def save() {
 
         Integer customerId = Integer.parseInt(params.customer_id)
         Integer payerId = Integer.parseInt(params.payer_id)
@@ -46,7 +66,6 @@ class PaymentController {
 
         if(!customerId || !payerId || !paymentType || !value || !dueDate){
             String errorMessage = "Faltam os parâmetros:"
-
             if(!customerId) errorMessage += " customer_id"
             if(!payerId) errorMessage += " payer_id"
             if(!paymentType) errorMessage += " payment_type"
@@ -64,24 +83,17 @@ class PaymentController {
 
         if(!payment){
             response.status = 400
-            render([error: "Não foi possível criar o pagamento"] as JSON)
+            render([erro: "Não foi possível criar o pagamento"] as JSON)
         }
 
         response.status = 201
         redirect(action: "show", id: payment.id)
     }
 
-    def edit() {
+    def update() {
         if(!params.id){
             response.status = 400
             render([erro: "O parâmetro id está faltando"] as JSON)
-        }
-
-        if(request.method == "GET"){
-            Payment payment = Payment.get(params.id)
-            response.status=200
-            render(view: "edit", model: [payment: payment])
-            return
         }
 
         Integer id = Integer.parseInt(params.id)
@@ -89,14 +101,15 @@ class PaymentController {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm")
         Date dueDate = format.parse(params.due_date)
         
-        Payment payment = paymentService.editPayment(id, value, dueDate)
+        Payment payment = Payment.get(params.id)
+        payment = paymentService.editPayment(payment, value, dueDate)
 
         if(!payment){
             response.status = 400
             render([erro: "O pagamento não pôde ser editado"] as JSON)
         }
-        
-        redirect(view: "show", model: [payment: payment])
+
+        redirect(action: "show", id: payment.id)
     }
 
     def remove() {
@@ -106,8 +119,9 @@ class PaymentController {
         }
 
         Integer id = Integer.parseInt(params.id)
+        Payment payment = Payment.get(id)
 
-        Boolean deleted = paymentService.deletePayment(id)
+        Boolean deleted = paymentService.deletePayment(payment)
 
         if(!deleted){
             response.status = 400
@@ -123,17 +137,16 @@ class PaymentController {
             render([erro: "O parâmetro id está faltando"] as JSON)
         }
 
-        Payment payment
-
         Integer id = Integer.parseInt(params.id)
+        Payment payment = Payment.get(id)
 
         if(!params.due_date){
-            payment = paymentService.restorePayment(id)
+            payment = paymentService.restorePayment(payment)
         }
         else{
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
             Date dueDate = format.parse(params.due_date);
-            payment = paymentService.restorePayment(id,dueDate)
+            payment = paymentService.restorePayment(payment,dueDate)
         }
 
         if(!payment){
@@ -151,8 +164,9 @@ class PaymentController {
         }
 
         Integer id = Integer.parseInt(params.id)
+        Payment payment = Payment.get(id)
 
-        Boolean confirmed = paymentService.confirmPayment(id)
+        Boolean confirmed = paymentService.confirmPayment(payment)
 
         if(!confirmed){
             response.status = 400
