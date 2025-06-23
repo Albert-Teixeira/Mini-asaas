@@ -23,7 +23,7 @@
                 <p>Data de recebimento: ${payment.dateReceived}</p>
                 <p>Deleted: ${payment.deleted}</p>
 
-                <g:if test="${ payment.status == statusType.RECEBIDA }">
+                <g:if test="${ payment.status == statusType.RECEIVED }">
                     <a href="${createLink(action:"show",id:"${payment.id}")}">Acessar pagamento</a>
                 </g:if>
                 <g:elseif test="${ payment.deleted }">
