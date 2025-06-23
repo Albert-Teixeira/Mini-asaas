@@ -147,4 +147,23 @@ class PaymentService {
 
         return true
     }
+
+    void expirePayment(Payment payment){
+        payment.status = StatusType.VENCIDA
+    }
+
+    void checkExpiredPayments(){
+        Date today = new Date()
+
+        List<Payment> paymentList = Payment.createCriteria().list {
+            le("dueDate", today)
+            and {
+                like("status", StatusType.PENDENTE)
+            }
+        }
+
+        for (Payment payment in paymentList) {
+            expirePayment(payment)
+        }
+    }
 }
