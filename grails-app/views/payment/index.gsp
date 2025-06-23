@@ -10,7 +10,7 @@
            <a href="${createLink(action:"index")}">Voltar</a>
         </g:if>
         <g:else>
-           <a href="${createLink(action:"index",params:[deleted:1])}">Ver cobranças removidas</a>
+           <a href="${createLink(action:"index",params:[deleted:"1"])}">Ver cobranças removidas</a>
         </g:else>
         <g:each var="payment" in="${ paymentList }">
             <div>
@@ -23,7 +23,7 @@
                 <p>Data de recebimento: ${payment.dateReceived}</p>
                 <p>Deleted: ${payment.deleted}</p>
 
-                <g:if test="${ payment.status == statusType.RECEBIDA }">
+                <g:if test="${ payment.status == statusType.RECEIVED }">
                     <a href="${createLink(action:"show",id:"${payment.id}")}">Acessar pagamento</a>
                 </g:if>
                 <g:elseif test="${ payment.deleted }">

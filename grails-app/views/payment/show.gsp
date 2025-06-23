@@ -21,7 +21,7 @@
         <g:if test="${ payment.deleted }">
            <a href="${createLink(action:"restore",id:"${payment.id}")}">Restaurar pagamento</a>
         </g:if>
-        <g:elseif test="${payment.status == statusType.PENDENTE || payment.status == statusType.VENCIDA}">
+        <g:elseif test="${payment.status == statusType.PENDING || payment.status == statusType.OVERDUE}">
             <a href="${createLink(action:"edit",id:"${payment.id}")}">Editar pagamento</a>
             <a href="${createLink(action:"remove",id:"${payment.id}")}">Deletar Pagamento</a>
             <a href="${createLink(action:"confirm",id:"${payment.id}")}">Receber Pagamento</a>

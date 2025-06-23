@@ -1,32 +1,18 @@
 package com.asaas.mini
 
 import grails.gorm.transactions.Transactional
-import java.text.SimpleDateFormat
 
 @Transactional
 class PaymentService {
 
-    def createPayment(customerId, payerId, paymentType, value, dueDate) {
-
-        def customer = Customer.get(customerId)
-
-        def payer = Payer.get(payerId)
-
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
-        Date formatedDueDate = format.parse(dueDate);
-
-        Date today = new Date()
-        if(formatedDueDate.before(today)){
-            return null
-        }
-
-        def payment = new Payment(
+    Payment createPayment(Customer customer, Payer payer, PaymentType paymentType, Double value, Date dueDate) {
+        Payment payment = new Payment(
             customer: customer,
             payer: payer,
             paymentType: paymentType,
             value: value,
-            status: StatusType.PENDENTE,
-            dueDate: formatedDueDate,
+            status: StatusType.PENDING,
+            dueDate: dueDate,
             dateReceived: null)
 
         try {
@@ -39,36 +25,35 @@ class PaymentService {
         return payment
     }
 
-    def getPayments(Boolean deleted) {
+    List<Payment> getPayments(Boolean deleted) {
         if(deleted){
-            def payments = Payment.findAllByDeleted(true)
+            List<Payment> payments = Payment.findAllByDeleted(true)
             return payments
         }
 
-        def payments = Payment.findAllByDeleted(false)
+        List<Payment> payments = Payment.findAllByDeleted(false)
 
         return payments
     }
 
-    def getPaymentsByCustomer(Customer customer) {
-        def payments = Payment.findAll {
+    List<Payment> getPaymentsByCustomer(Customer customer) {
+        List<Payment> payments = Payment.findAll {
             customer == customer
         }
 
         return payments
     }
 
-    def getPaymentsByPayer(Payer payer) {
-
-        def payments = Payment.findAll {
+    List<Payment> getPaymentsByPayer(Payer payer) {
+        List<Payment> payments = Payment.findAll {
             payer == payer
         }
 
         return payments
     }
 
-    def getPaymentsByCustomerAndPayer(Customer customer, Payer payer) {
-        def payments = Payment.findAll {
+    List<Payment> getPaymentsByCustomerAndPayer(Customer customer, Payer payer) {
+        List<Payment> payments = Payment.findAll {
             customer == customer
             payer == payer
         }
@@ -76,11 +61,7 @@ class PaymentService {
         return payments
     }
 
-    def editPayment(payment, value, dueDate) {
-
-        def sanitizedValue = Double.parseDouble(value)
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
-        Date formatedDueDate = format.parse(dueDate);
+    Payment editPayment(Payment payment, Double value, Date dueDate) {
 
         Date today = new Date()
         if(formatedDueDate.before(today)){
@@ -88,8 +69,8 @@ class PaymentService {
         }
 
         try {
-            payment.value = sanitizedValue
-            payment.dueDate = formatedDueDate
+            payment.value = value
+            payment.dueDate = dueDate
             payment.save(failOnError: true)
         } catch (Exception e) {
             println(e.getMessage())
@@ -99,7 +80,7 @@ class PaymentService {
         return payment
     }
 
-    def deletePayment(payment) {
+    Boolean deletePayment(Payment payment){
         if(payment.deleted == true){
             return false
         }
@@ -115,16 +96,16 @@ class PaymentService {
         return true
     }
 
-    def restorePayment(payment,dueDate = null) {
+    Payment restorePayment(Payment payment, Date dueDate = null) {
         if(payment.deleted == false){
             return null
         }
 
-        if(payment.status == StatusType.RECEBIDA){
+        if(payment.status == StatusType.RECEIVED){
             return null
         }
 
-        if(payment.status == StatusType.VENCIDA && !dueDate){
+        if(payment.status == StatusType.OVERDUE && !dueDate){
             return null
         }
 
@@ -134,9 +115,7 @@ class PaymentService {
         }
 
         try {
-            if(payment.status != StatusType.RECEBIDA) {
-                payment.status = StatusType.PENDENTE
-            }
+            payment.status = StatusType.PENDING
             if(dueDate){
                 payment.dueDate = dueDate
             }
@@ -149,17 +128,17 @@ class PaymentService {
         return payment
     }
 
-    def confirmPayment(payment){
+    Boolean confirmPayment(Payment payment){
         if(payment.deleted){
             return false
         }
 
-        if(payment.status != StatusType.PENDENTE){
+        if(payment.status != StatusType.PENDING){
             return false
         }
 
         try {
-            payment.status = StatusType.RECEBIDA
+            payment.status = StatusType.RECEIVED
             payment.dateReceived = new Date()
         } catch(Exception e) {
             println(e.getMessage())
