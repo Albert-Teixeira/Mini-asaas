@@ -62,6 +62,7 @@ class AuthenticationController {
         Customer accountOwner = owner.customer
 
         List<User> accountUserList = authenticationService.getUsersByCustomerAccount(accountOwner)
+        println(accountUserList)
 
         render(view: "manage", model: [accountUserList: accountUserList])
     }
@@ -163,7 +164,8 @@ class AuthenticationController {
         render "Parabéns '${user.username}', agora você possui acesso à conta"
     }
 
-    def removeUser() {
+    def remove() {
+        println('aqui')
         if(!params.id){
             render "Falta o parâmetro id"
             request.status = 404
@@ -180,6 +182,9 @@ class AuthenticationController {
             render("Ocorreu um erro ao remover o usuário")
             return
         }
+
+        println(User.get(id))
+        println(User.get(id).accountExpired)
 
         render("Usuário removido com sucesso")
     }

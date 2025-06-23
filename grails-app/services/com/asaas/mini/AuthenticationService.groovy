@@ -25,8 +25,7 @@ class AuthenticationService {
         Role userRole = Role.get(1)
 
         UserRole.remove user, userRole
-        user.accountExpired = true
-        user.save()
+        user.delete()
 
         UserRole.withSession {
             it.flush()
