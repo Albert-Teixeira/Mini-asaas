@@ -21,6 +21,23 @@ class AuthenticationService {
         return user
     }
 
+    Boolean deleteUser(User user){
+        Role userRole = Role.get(1)
+
+        UserRole.remove user, userRole
+        user.accountExpired = true
+        user.save()
+
+        UserRole.withSession {
+            it.flush()
+            it.clear()
+        }
+
+        if(user) return false
+
+        return true
+    }
+
     List<User> getUsersByCustomerAccount(Customer customer){
         List<User> userList = User.findAll {
             customer == customer
