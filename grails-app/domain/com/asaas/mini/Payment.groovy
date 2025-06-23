@@ -1,6 +1,10 @@
 package com.asaas.mini
 
 import com.asaas.mini.utils.BaseEntity
+import com.asaas.mini.PaymentType
+import com.asaas.mini.StatusType
+import com.asaas.mini.Customer
+import com.asaas.mini.Payer
 
 class Payment extends BaseEntity{
 
@@ -8,7 +12,7 @@ class Payment extends BaseEntity{
     Payer payer
     PaymentType paymentType
     Double value
-    StatusType status
+    StatusType statusType
     Date dueDate
     Date dateReceived
 
@@ -19,6 +23,6 @@ class Payment extends BaseEntity{
 
     static mapping = {
         paymentType enumType: 'string'
-        status enumType: 'string'
+        statusType enumType: 'string'
     }
 }

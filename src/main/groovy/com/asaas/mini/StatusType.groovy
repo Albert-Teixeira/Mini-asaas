@@ -1,7 +1,7 @@
 package com.asaas.mini
 
 enum StatusType{
-    PENDENTE,
-    RECEBIDA,
-    VENCIDA
+    PENDING,
+    RECEIVED,
+    OVERDUE
 }
