@@ -1,8 +1,8 @@
 package com.asaas.mini
 
 enum PaymentType{
-    BOLETO,
-    CARTAO,
+    BANK_SLIP,
+    CREDIT_CARD,
     PIX,
-    DINHEIRO
+    MONEY
 }

@@ -3,10 +3,10 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
+        <title>Criar Cobrança</title>
     </head>
     <body>
-        <form action="${createLink(action: "create")}" method="post">
+        <form action="${createLink(action: "save")}" method="post">
             <label for="customer_id">Id do cliente:</label><br>
             <input type="text" id="customer_id" name="customer_id"><br>
 

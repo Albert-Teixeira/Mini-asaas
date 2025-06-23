@@ -5,18 +5,13 @@ import grails.gorm.transactions.Transactional
 @Transactional
 class PaymentService {
 
-    Payment createPayment(int customerId, int payerId, PaymentType paymentType, Double value, Date dueDate) {
-
-        Customer customer = Customer.get(customerId) //validar se achou depois
-
-        Payer payer = Payer.get(payerId) //validar se achou depois
-
+    Payment createPayment(Customer customer, Payer payer, PaymentType paymentType, Double value, Date dueDate) {
         Payment payment = new Payment(
             customer: customer,
             payer: payer,
             paymentType: paymentType,
             value: value,
-            status: StatusType.PENDENTE,
+            status: StatusType.PENDING,
             dueDate: dueDate,
             dateReceived: null)
 
@@ -26,8 +21,6 @@ class PaymentService {
             println(e.getMessage())
             return null
         }
-
-        //To do: notificar cliente
         
         return payment
     }
@@ -43,15 +36,7 @@ class PaymentService {
         return payments
     }
 
-    Payment getPaymentById(int id) {
-        Payment payment = Payment.get(id)
-
-        return payment
-    }
-
-    List<Payment> getPaymentsByCustomer(int customerId) {
-        Customer customer = Customer.get(customerId)
-
+    List<Payment> getPaymentsByCustomer(Customer customer) {
         List<Payment> payments = Payment.findAll {
             customer == customer
         }
@@ -59,9 +44,7 @@ class PaymentService {
         return payments
     }
 
-    List<Payment> getPaymentsByPayer(int payerId) {
-        Payer payer = Payment.get(payerId)
-
+    List<Payment> getPaymentsByPayer(Payer payer) {
         List<Payment> payments = Payment.findAll {
             payer == payer
         }
@@ -69,11 +52,7 @@ class PaymentService {
         return payments
     }
 
-    List<Payment> getPaymentsByCustomerAndPayer(int customerId, int payerId) {
-        Customer customer = Customer.get(customerId)
-        
-        Payer payer = Payment.get(payerId)
-
+    List<Payment> getPaymentsByCustomerAndPayer(Customer customer, Payer payer) {
         List<Payment> payments = Payment.findAll {
             customer == customer
             payer == payer
@@ -82,8 +61,12 @@ class PaymentService {
         return payments
     }
 
-    Payment editPayment(int id, Double value, Date dueDate) {
-        Payment payment = Payment.get(id)
+    Payment editPayment(Payment payment, Double value, Date dueDate) {
+
+        Date today = new Date()
+        if(formatedDueDate.before(today)){
+            return null
+        }
 
         try {
             payment.value = value
@@ -97,55 +80,42 @@ class PaymentService {
         return payment
     }
 
-    Boolean deletePayment(int id) {
-        Payment payment = Payment.get(id)
-
+    Boolean deletePayment(Payment payment){
         if(payment.deleted == true){
-            return false //Cobrança já deletada
+            return false
         }
 
         try {
-            if(payment.status == StatusType.VENCIDA || payment.status == StatusType.RECEBIDA){
-                payment.deleted = true
-            }
-            else{
-                payment.deleted = true
-                payment.status = StatusType.ARQUIVADA
-            }
-            payment.save(failOnError: true)
+            payment.deleted = true
+            payment.save(flush: true, failOnError: true)
         } catch (Exception e) {
             println(e.getMessage())
             return false
         }
 
-        //To do: notificar cliente
-
         return true
     }
 
-    Payment restorePayment(int id, Date dueDate = null) {
-        Payment payment = Payment.get(id)
-
+    Payment restorePayment(Payment payment, Date dueDate = null) {
         if(payment.deleted == false){
-            return null //Cobrança não foi deletada
-        }
-
-        if(payment.status == StatusType.RECEBIDA){
             return null
         }
 
-        if(payment.status == StatusType.VENCIDA && !dueDate){
-            return null //Cobrança vencida e não foi apresentada uma nova data de vencimento
+        if(payment.status == StatusType.RECEIVED){
+            return null
         }
 
-        if(dueDate){
-            if(dueDate < Date()){
-                return null //Nova data de cobrança menor que a data atual
-            }
+        if(payment.status == StatusType.OVERDUE && !dueDate){
+            return null
+        }
+
+        Date today = new Date()
+        if(dueDate && dueDate.before(today)){
+            return null
         }
 
         try {
-            payment.status = StatusType.PENDENTE
+            payment.status = StatusType.PENDING
             if(dueDate){
                 payment.dueDate = dueDate
             }
@@ -155,31 +125,25 @@ class PaymentService {
             return null
         }
 
-        //To do: Notificar cliente
-
         return payment
     }
 
-    Boolean confirmPayment(int id){
-        Payment payment = Payment.get(id)
-
+    Boolean confirmPayment(Payment payment){
         if(payment.deleted){
-            return false //Cobrança deletada
+            return false
         }
 
-        if(payment.status != StatusType.PENDENTE){
-            return false //Cobrança deve estar pendente
+        if(payment.status != StatusType.PENDING){
+            return false
         }
 
         try {
-            payment.status = StatusType.RECEBIDA //To do: Add saldo para o cliente depois?
+            payment.status = StatusType.RECEIVED
             payment.dateReceived = new Date()
         } catch(Exception e) {
             println(e.getMessage())
             return false
         }
-
-        //To do: Notificar cliente
 
         return true
     }
