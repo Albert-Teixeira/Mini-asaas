@@ -8,8 +8,8 @@
     <body>
         <g:each var="user" in="${ accountUserList }">
             <p>${user.username}</p>
-            <g:form name="invitationForm" action="saveInvitedUser" controller="authentication" id="${id}">
-                <g:actionSubmit value="remover usuário" action="saveInvitedUser"/>
+            <g:form name="removeUserForm" action="removeUser" controller="authentication" id="${user.id}">
+                <g:actionSubmit value="remover usuário" action="removeUser"/>
             </g:form>
             <p>-----------------------</p>
         </g:each>

@@ -173,7 +173,7 @@ class AuthenticationController {
         Integer id = Integer.parseInt(params.id)
 
         try {
-            user = authenticationService.registerUserAndCustomer(email, password, customer)
+            authenticationService.deleteUser(User.get(id))
         } catch (Exception e) {
             println(e.getMessage())
             request.status = 500

@@ -21,7 +21,7 @@ class AuthenticationService {
         return user
     }
 
-    Boolean deleteUser(User user){
+    void deleteUser(User user){
         Role userRole = Role.get(1)
 
         UserRole.remove user, userRole
@@ -32,10 +32,6 @@ class AuthenticationService {
             it.flush()
             it.clear()
         }
-
-        if(user) return false
-
-        return true
     }
 
     List<User> getUsersByCustomerAccount(Customer customer){
