@@ -22,7 +22,7 @@ class AuthenticationService {
     }
 
     void deleteUser(User user){
-        Role userRole = Role.get(1)
+        Role userRole = Role.get(2)
 
         UserRole.remove user, userRole
         user.delete()
