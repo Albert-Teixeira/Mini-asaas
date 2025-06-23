@@ -2,7 +2,7 @@ package com.asaas.mini
 
 import grails.plugin.springsecurity.annotation.Secured
 
-@Secured('ROLE_USER')
+@Secured(['ROLE_USER','ROLE_OWNER'])
 class CustomerController {
 
     def index() {
