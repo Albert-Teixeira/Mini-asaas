@@ -115,9 +115,13 @@ class PaymentService {
         }
 
         try {
+<<<<<<< HEAD
             if(payment.statusType != StatusType.RECEIVED) {
                 payment.statusType = StatusType.PENDING
             }
+=======
+            payment.statusType = StatusType.PENDING
+>>>>>>> dev/job-vencer-cobranca
             if(dueDate){
                 payment.dueDate = dueDate
             }
