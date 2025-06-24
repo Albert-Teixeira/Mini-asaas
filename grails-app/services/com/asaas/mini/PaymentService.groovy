@@ -11,7 +11,7 @@ class PaymentService {
             payer: payer,
             paymentType: paymentType,
             value: value,
-            status: StatusType.PENDING,
+            statusType: StatusType.PENDING,
             dueDate: dueDate,
             dateReceived: null)
 
@@ -101,11 +101,11 @@ class PaymentService {
             return null
         }
 
-        if(payment.status == StatusType.RECEIVED){
+        if(payment.statusType == StatusType.RECEIVED){
             return null
         }
 
-        if(payment.status == StatusType.OVERDUE && !dueDate){
+        if(payment.statusType == StatusType.OVERDUE && !dueDate){
             return null
         }
 
@@ -115,7 +115,9 @@ class PaymentService {
         }
 
         try {
-            payment.status = StatusType.PENDING
+            if(payment.statusType != StatusType.RECEIVED) {
+                payment.statusType = StatusType.PENDING
+            }
             if(dueDate){
                 payment.dueDate = dueDate
             }
@@ -133,12 +135,12 @@ class PaymentService {
             return false
         }
 
-        if(payment.status != StatusType.PENDING){
+        if(payment.statusType != StatusType.PENDING){
             return false
         }
 
         try {
-            payment.status = StatusType.RECEIVED
+            payment.statusType = StatusType.RECEIVED
             payment.dateReceived = new Date()
         } catch(Exception e) {
             println(e.getMessage())

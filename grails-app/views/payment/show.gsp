@@ -11,7 +11,7 @@
         <p>Pagador: ${payment.payer.name}</p>
         <p>Tipo de pagamento: ${payment.paymentType}</p>
         <p>Valor: ${payment.value}</p>
-        <p>Status: ${payment.status}</p>
+        <p>Status: ${payment.statusType}</p>
         <p>Data de vencimento: ${payment.dueDate}</p>
         <p>Date de recebimento: ${payment.dateReceived}</p>
         <p>Deleted: ${payment.deleted}</p>
@@ -21,7 +21,7 @@
         <g:if test="${ payment.deleted }">
            <a href="${createLink(action:"restore",id:"${payment.id}")}">Restaurar pagamento</a>
         </g:if>
-        <g:elseif test="${payment.status == statusType.PENDING || payment.status == statusType.OVERDUE}">
+        <g:elseif test="${payment.statusType == statusType.PENDING || payment.statusType == statusType.OVERDUE}">
             <a href="${createLink(action:"edit",id:"${payment.id}")}">Editar pagamento</a>
             <a href="${createLink(action:"remove",id:"${payment.id}")}">Deletar Pagamento</a>
             <a href="${createLink(action:"confirm",id:"${payment.id}")}">Receber Pagamento</a>

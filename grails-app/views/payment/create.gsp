@@ -15,10 +15,10 @@
 
             <label for="payment_type">Selecione o tipo de pagamento:</label><br>
             <select id="payment_type" name="payment_type">
-                <option value="BOLETO">BOLETO</option>
-                <option value="CARTAO">CARTAO</option>
+                <option value="BANK_SLIP">BANK_SLIP</option>
+                <option value="CREDIT_CARD">CREDIT_CARD</option>
                 <option value="PIX">PIX</option>
-                <option value="DINHEIRO">DINHEIRO</option>
+                <option value="MONEY">MONEY</option>
             </select><br>
 
             <label for="value">Valor:</label><br>
