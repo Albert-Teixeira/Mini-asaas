@@ -18,12 +18,12 @@
                 <p>Pagador: ${payment.payer.name}</p>
                 <p>Tipo de pagamento: ${payment.paymentType}</p>
                 <p>Valor: ${payment.value}</p>
-                <p>Status: ${payment.status}</p>
+                <p>Status: ${payment.statusType}</p>
                 <p>Data de vencimento: ${payment.dueDate}</p>
                 <p>Data de recebimento: ${payment.dateReceived}</p>
                 <p>Deleted: ${payment.deleted}</p>
 
-                <g:if test="${ payment.status == statusType.RECEBIDA }">
+                <g:if test="${ payment.statusType == statusType.RECEIVED }">
                     <a href="${createLink(action:"show",id:"${payment.id}")}">Acessar pagamento</a>
                 </g:if>
                 <g:elseif test="${ payment.deleted }">
