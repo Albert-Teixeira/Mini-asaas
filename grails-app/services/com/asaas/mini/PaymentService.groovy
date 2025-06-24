@@ -32,7 +32,6 @@ class PaymentService {
         try {
             payment.save(failOnError: true)
         } catch (Exception e) {
-            println('AQUIIIIIIIIIIIIIIIIII')
             println(e.getMessage())
             return null
         }
