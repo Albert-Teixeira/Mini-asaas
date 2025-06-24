@@ -7,6 +7,10 @@ class AuthenticationController {
     AuthenticationService authenticationService
 
     def index() {
+        redirect(action: "register")
+    }
+
+    def register() {
         render(view: "register")
     }
 
