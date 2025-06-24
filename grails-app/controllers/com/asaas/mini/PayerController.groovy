@@ -18,9 +18,7 @@ class PayerController {
 
     def show(Long id) {
         Payer payer = Payer.get(id)
-        println "Loaded from DB for show: ${payer?.properties}"
         respond payer ?: notFound()
-
     }
 
     def create() {
@@ -40,12 +38,12 @@ class PayerController {
                 '*' { respond payer, [status: CREATED] }
             }
         } catch (ValidationException e) {
-            flash.message = "Validation Error: ${e.message}"
-            respond payer, view:'create'
+            flash.message = "Erro de Validação: ${e.message}"
+            respond new Payer(params), view:'create'
             return
         } catch (Exception e) {
-            flash.message = "Error saving payer: ${e.message}"
-            respond payer, view:'create'
+            flash.message = "Erro ao salvar o pagador: ${e.message}"
+            respond new Payer(params), view:'create'
             return
         }
     }
@@ -55,15 +53,8 @@ class PayerController {
     }
 
     def update() {
-
-        println "PayerController.update() - Params: ${params}"
-
         try {
             Payer payer = payerService.update(Payer.get(params.id), params)
-
-            // Debug
-            println "PayerController.update() - Payer updated successfully: ${payer.properties}"
-            println "PayerController.update() - Has errors: ${payer.hasErrors()}"
 
             request.withFormat {
                 form multipartForm {
@@ -73,12 +64,12 @@ class PayerController {
                 '*'{ respond payer, [status: OK] }
             }
         } catch (ValidationException e) {
-            flash.message = "Validation Error: ${e.message}"
-            respond payer, view:'edit'
+            flash.message = "Erro de Validação: ${e.message}"
+            respond new Payer(params), view:'edit'
             return
         } catch (Exception e) {
-            flash.message = "Error updating payer: ${e.message}"
-            respond payer, view:'edit'
+            flash.message = "Erro ao atualizar o pagador: ${e.message}"
+            respond new Payer(params), view:'edit'
             return
         }
     }
@@ -108,7 +99,7 @@ class PayerController {
                 '*'{ render status: NOT_FOUND }
             }
         } catch (Exception e) {
-            flash.message = "Error deleting payer: ${e.message}"
+            flash.message = "Erro ao deletar o pagador: ${e.message}"
             request.withFormat {
                 form multipartForm {
                     redirect action: "index", method: "GET"

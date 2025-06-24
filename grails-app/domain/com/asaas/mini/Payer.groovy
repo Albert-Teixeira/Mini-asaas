@@ -11,14 +11,14 @@ class Payer extends BaseEntity {
     String state
     String city
     String street
-    Integer houseNumber
+    Integer addressNumber
     String postalCode
+    String complement
     
-    //Customer customer
+    Customer customer
 
     static constraints = {
-    //    customer nullable: true
-
+        customer nullable: true
         name blank: false, maxSize: 100;
         email blank: false, email: true, maxSize: 100;
         phoneNumber blank: false, maxSize: 20;
@@ -26,16 +26,13 @@ class Payer extends BaseEntity {
         state blank: false, maxSize: 50;
         city blank: false, maxSize: 50;
         street blank: false, maxSize: 100;
-        houseNumber min: 1, max: 99999;
+        addressNumber min: 1, max: 99999;
         postalCode blank: false, maxSize: 10;
+        complement nullable: true, maxSize: 100;
     }
     
     static mapping = {
         table 'payer'
-    }
-
-/*
-    static mapping = {
         customer column: 'customer_id'
-    }*/
+    }
 }
