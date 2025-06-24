@@ -64,7 +64,7 @@ class PaymentService {
     Payment editPayment(Payment payment, Double value, Date dueDate) {
 
         Date today = new Date()
-        if(formatedDueDate.before(today)){
+        if(dueDate.before(today)){
             return null
         }
 
