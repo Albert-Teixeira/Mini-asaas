@@ -1,22 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
     <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Minha conta</title>
+        <meta name="layout" content="main" />
+        <g:set var="entityName" value="${message(code: 'customer.label', default: 'Customer')}" />
+        <title>
+            <g:message code="default.list.label" args="[entityName]" />
+        </title>
     </head>
     <body>
-        <g:if test="${ !customer }">
-            <h1>Parece que você não tem uma conta associada ao seu usuário, gostaria de criar?</h1>
-        </g:if>
-        <g:else>
-            <h1>Bem vindo ${customer.name} !</h1>
-            <p>Cpf/Cnpj: ${customer.cpfCnpj}</p>
-            <br>
-            <p>Morador de ${customer.city} - ${customer.state}, ${customer.street}, Nº ${customer.houseNumber}, CEP: ${customer.postalCode}</p>
-        </g:else>
+        <a href="#list-customer" class="skip" tabindex="-1">
+            <g:message code="default.link.skip.label" default="Pular para o conteúdo"/>
+        </a>
+        <div class="nav" role="navigation">
+            <ul>
+                <li>
+                    <a class="home" href="${createLink(uri: '/')}">
+                        <g:message code="default.home.label"/>
+                    </a>
+                </li>
+                <li>
+                    <g:link class="create" action="create">
+                        <g:message code="default.new.label" args="[entityName]" />
+                    </g:link>
+                </li>
+            </ul>
+        </div>
+        <div id="list-customer" class="content scaffold-list" role="main">
+            <h1>
+                <g:message code="default.list.label" args="[entityName]" />
+            </h1>
+            <g:if test="${flash.message}">
+                <div class="message" role="status">${flash.message}</div>
+            </g:if>
+            <f:table collection="${customerList}" />
 
-
-        <g:link controller='logout'>Logout</g:link>
+            <div class="pagination">
+                <g:paginate total="${customerCount ?: 0}" />
+            </div>
+        </div>
     </body>
 </html>
