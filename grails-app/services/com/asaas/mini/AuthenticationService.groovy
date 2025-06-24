@@ -6,8 +6,6 @@ import grails.gorm.transactions.Transactional
 class AuthenticationService {
 
     User registerUserAndCustomer(String username, String password, Customer customer) {
-        customer.save()
-        println(customer)
         Role userRole = Role.get(1)
         User user = new User(username: username, password: password, customer: customer).save()
         if(!user){
