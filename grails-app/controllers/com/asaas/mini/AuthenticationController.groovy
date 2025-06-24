@@ -43,7 +43,7 @@ class AuthenticationController {
             state: state,
             city: city,
             street: street,
-            houseNumber: addressNumber,
+            addressNumber: addressNumber,
             postalCode: postalCode)
 
         try {
