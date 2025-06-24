@@ -8,7 +8,7 @@ class AuthenticationController {
     AuthenticationService authenticationService
 
     def index() {
-        render(view: "index")
+        render(view: "register")
     }
 
     def save() {
