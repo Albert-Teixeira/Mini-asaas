@@ -149,7 +149,7 @@ class PaymentService {
     }
 
     void expirePayment(Payment payment){
-        payment.status = StatusType.VENCIDA
+        payment.status = StatusType.OVERDUE
     }
 
     void checkExpiredPayments(){
@@ -158,7 +158,7 @@ class PaymentService {
         List<Payment> paymentList = Payment.createCriteria().list {
             le("dueDate", today)
             and {
-                like("status", StatusType.PENDENTE)
+                like("status", StatusType.PENDING)
             }
         }
 
