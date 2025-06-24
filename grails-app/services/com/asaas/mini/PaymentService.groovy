@@ -151,7 +151,7 @@ class PaymentService {
     }
 
     void expirePayment(Payment payment){
-        payment.status = StatusType.OVERDUE
+        payment.statusType = StatusType.OVERDUE
     }
 
     void checkExpiredPayments(){
