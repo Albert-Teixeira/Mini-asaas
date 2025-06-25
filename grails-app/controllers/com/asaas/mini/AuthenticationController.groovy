@@ -18,11 +18,6 @@ class AuthenticationController {
         render(view: "register")
     }
 
-    def mail() {
-        
-        render "email enviado com sucesso"
-    }
-
     def save() {
         String email = params.email
         String password = params.password
