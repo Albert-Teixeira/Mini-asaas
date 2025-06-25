@@ -6,6 +6,7 @@
 </head>
 <body>
 <content tag="nav">
+    <g:link controller="authentication">Registrar</g:link>
     <g:link controller="customer">Customer</g:link>
     <g:link controller="payer">Payer</g:link>
     <g:link controller="payment">Payment</g:link>

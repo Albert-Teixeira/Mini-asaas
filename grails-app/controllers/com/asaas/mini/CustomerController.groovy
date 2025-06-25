@@ -1,6 +1,7 @@
 package com.asaas.mini
 import grails.validation.ValidationException
 import static org.springframework.http.HttpStatus.*
+import grails.plugin.springsecurity.annotation.Secured
 
 class CustomerController {
 
@@ -8,20 +9,28 @@ class CustomerController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
-    def index(Integer max) {
-        params.max = Math.min(max ?: 10, 100)
-        respond customerService.list(params), model:[customerCount: customerService.count()]
-    }
+    // @Secured(['ROLE_USER','ROLE_OWNER'])
+    // def index(Integer max) {
+    //     User user = getAuthenticatedUser()
+    //     Customer customer = user.customer
+        
+    //     params.max = Math.min(max ?: 10, 100)
+    //     respond customerService.list(params), model:[customerCount: customerService.count()]
+    // }
 
-    def show(Long id) {
-        Customer customer = customerService.get(id)
+    @Secured(['ROLE_USER','ROLE_OWNER'])
+    def index(Long id) {
+        User user = getAuthenticatedUser()
+        Customer customer = user.customer
         respond customer ?: notFound()
     }
 
+    @Secured(['ROLE_USER','ROLE_OWNER'])
     def create() {
         respond new Customer(params)
     }
 
+    @Secured(['ROLE_USER','ROLE_OWNER'])
     def save() {
         try{
             Customer customer = customerService.save(params)
@@ -44,10 +53,12 @@ class CustomerController {
         }
     }
 
+    @Secured(['ROLE_USER','ROLE_OWNER'])
     def edit(Long id) {
         respond customerService.get(id)
     }
 
+    @Secured(['ROLE_USER','ROLE_OWNER'])
     def update() {
 
         try{
@@ -71,6 +82,7 @@ class CustomerController {
         }
     }
 
+    @Secured(['ROLE_USER','ROLE_OWNER'])
     def delete(Long id) {
         if (id == null) {
             notFound()
@@ -106,6 +118,7 @@ class CustomerController {
         }
     }
 
+    @Secured(['ROLE_USER','ROLE_OWNER'])
     protected void notFound() {
         request.withFormat {
             form multipartForm {
