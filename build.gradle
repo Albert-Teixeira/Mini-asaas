@@ -60,6 +60,7 @@ dependencies {
     implementation "org.grails.plugins:spring-security-core:4.0.3"
     implementation "org.grails.plugins:quartz:3.0.0"
     implementation "me.paulschwarz:spring-dotenv:4.0.0"
+    implementation "org.grails.plugins:mail:3.0.0"
     profile "org.grails.profiles:web"
     runtimeOnly "org.glassfish.web:el-impl:2.2.1-b05"
     runtimeOnly "com.h2database:h2"

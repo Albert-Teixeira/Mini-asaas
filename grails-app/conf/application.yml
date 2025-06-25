@@ -8,6 +8,18 @@ grails:
             # Whether to translate GORM events into Reactor events
             # Disabled by default for performance reasons
             events: false
+    mail:
+        host: smtp.gmail.com
+        port: 587
+        username: ${GMAIL_USER}
+        password: ${GMAIL_GENERATED_PASS}
+        props:
+            mail.smtp.ssl.trust: smtp.gmail.com
+            mail.smtp.auth: true
+            mail.smtp.channel: plain
+            mail.smtp.starttls.enable: true
+            mail.smtp.ssl.protocols: TLSv1.2
+            mail.smtp.protocol: smtps
 info:
     app:
         name: '@info.app.name@'
