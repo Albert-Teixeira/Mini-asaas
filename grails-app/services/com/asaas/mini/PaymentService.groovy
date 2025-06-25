@@ -25,19 +25,20 @@ class PaymentService {
         return payment
     }
 
-    List<Payment> getPayments(Boolean deleted) {
-        if(deleted){
-            List<Payment> payments = Payment.findAllByDeleted(true)
-            return payments
-        }
+    // List<Payment> getPayments(Boolean deleted) {
+    //     if(deleted){
+    //         List<Payment> payments = Payment.findAllByDeleted(true)
+    //         return payments
+    //     }
 
-        List<Payment> payments = Payment.findAllByDeleted(false)
+    //     List<Payment> payments = Payment.findAllByDeleted(false)
 
-        return payments
-    }
+    //     return payments
+    // }
 
-    List<Payment> getPaymentsByCustomer(Customer customer) {
+    List<Payment> getPaymentsByCustomer(Customer customer, Boolean deleted=false) {
         List<Payment> payments = Payment.findAll {
+            deleted == deleted
             customer == customer
         }
 

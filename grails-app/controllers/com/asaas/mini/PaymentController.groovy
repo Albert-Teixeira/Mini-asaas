@@ -23,8 +23,11 @@ class PaymentController {
         confirm: "GET"]
 
     def index() {
+        User user = getAuthenticatedUser()
+        Customer customer = user.customer
+        
         Boolean deleted = (params.deleted == "1")
-        List<Payment> paymentList = paymentService.getPayments(deleted)
+        List<Payment> paymentList = paymentService.getPaymentsByCustomer(customer,deleted)
 
         render(view: "index", model: [paymentList: paymentList, statusType: StatusType, deleted: deleted])
     }
