@@ -5,7 +5,10 @@ class AuthenticationController {
 
     static allowedMethods = [index: "GET", save: "POST", manage: "GET", invite: "POST", invitation: "GET", saveInvitedUser: "POST"]
 
+
     AuthenticationService authenticationService
+    InvitationService invitationService
+    CustomerService customerService
 
     def index() {
         redirect(action: "register")
@@ -21,16 +24,7 @@ class AuthenticationController {
     }
 
     def save() {
-        
-        String name = params.name
         String email = params.email
-        String phoneNumber = params.phoneNumber
-        String cpfCnpj = params.cpfCnpj
-        String state = params.state
-        String city = params.city
-        String street = params.street
-        Integer addressNumber = Integer.parseInt(params.addressNumber)
-        String postalCode = params.postalCode
         String password = params.password
         String password2 = params.password2
 
@@ -41,18 +35,8 @@ class AuthenticationController {
         }
 
         User user
-        Customer customer = new Customer(
-            name: name,
-            email: email,
-            phoneNumber: phoneNumber,
-            cpfCnpj: cpfCnpj,
-            state: state,
-            city: city,
-            street: street,
-            addressNumber: addressNumber,
-            postalCode: postalCode)
-
         try {
+            Customer customer = customerService.save(params)
             user = authenticationService.registerUserAndCustomer(email, password, customer, Role.get(1))
         } catch (Exception e) {
             println(e.getMessage())
