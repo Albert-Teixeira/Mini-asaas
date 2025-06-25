@@ -15,10 +15,7 @@ class Payer extends BaseEntity {
     String postalCode
     String complement
     
-    Customer customer
-
     static constraints = {
-        customer nullable: true
         name blank: false, maxSize: 100;
         email blank: false, email: true, maxSize: 100;
         phoneNumber blank: false, maxSize: 20;
@@ -33,6 +30,5 @@ class Payer extends BaseEntity {
     
     static mapping = {
         table 'payer'
-        customer column: 'customer_id'
     }
 }
