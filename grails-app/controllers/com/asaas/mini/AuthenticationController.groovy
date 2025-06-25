@@ -82,8 +82,10 @@ class AuthenticationController {
         Customer accountOwner = owner.customer
 
         Invitation invitation = new Invitation(email=params.email,
-            customer=customer,
+            customer=accountOwner,
             expired=false)
+        
+        
         
         //send email with invitation object to email service and in email service send email to user with link /authentication/invitation
 
@@ -181,6 +183,7 @@ class AuthenticationController {
         } catch (Exception e) {
             println(e.getMessage())
             request.status = 500
+            render("Erro ao remover usuário")
             return
         }
 
