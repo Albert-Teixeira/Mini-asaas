@@ -6,6 +6,9 @@
 </head>
 <body>
 <content tag="nav">
+    <g:link controller="customer">Customer</g:link>
+    <g:link controller="payer">Payer</g:link>
+    <g:link controller="payment">Payment</g:link>
     <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Application Status <span class="caret"></span></a>
         <ul class="dropdown-menu">
