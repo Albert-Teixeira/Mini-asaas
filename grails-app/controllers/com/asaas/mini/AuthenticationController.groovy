@@ -15,6 +15,15 @@ class AuthenticationController {
         render(view: "register")
     }
 
+    def mail() {
+        sendMail {
+            to "test@test.com"
+            subject "Hello John"
+            html "<b>Hello</b> World"
+        }
+        render "email enviado com sucesso"
+    }
+
     def save() {
         
         String name = params.name
