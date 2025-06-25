@@ -11,7 +11,8 @@ class PaymentController {
 
     PaymentService paymentService
 
-    static allowedMethods = [index: "GET",
+    static allowedMethods = [
+        index: "GET",
         show: "GET",
         create: "GET",
         edit: "GET",
@@ -60,16 +61,14 @@ class PaymentController {
 
     def save() {
 
-        Integer customerId = Integer.parseInt(params.customer_id)
         Integer payerId = Integer.parseInt(params.payer_id)
         PaymentType paymentType = PaymentType.valueOf(params.payment_type)
         Double value = Double.parseDouble(params.value)
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
         Date dueDate = format.parse(params.due_date);
 
-        if(!customerId || !payerId || !paymentType || !value || !dueDate){
+        if(!payerId || !paymentType || !value || !dueDate){
             String errorMessage = "Faltam os parâmetros:"
-            if(!customerId) errorMessage += " customer_id"
             if(!payerId) errorMessage += " payer_id"
             if(!paymentType) errorMessage += " payment_type"
             if(!value) errorMessage += " value"
@@ -79,7 +78,9 @@ class PaymentController {
             render([erro: errorMessage] as JSON)
         }
 
-        Customer customer = Customer.get(customerId)
+        User user = getAuthenticatedUser()
+        Customer customer = user.customer
+
         Payer payer = Payer.get(payerId)
 
         Payment payment = paymentService.createPayment(customer, payer, paymentType, value, dueDate)

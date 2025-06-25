@@ -7,9 +7,6 @@
     </head>
     <body>
         <form action="${createLink(action: "save")}" method="post">
-            <label for="customer_id">Id do cliente:</label><br>
-            <input type="text" id="customer_id" name="customer_id"><br>
-
             <label for="payer_id">Id do pagador:</label><br>
             <input type="text" id="payer_id" name="payer_id"><br>
 

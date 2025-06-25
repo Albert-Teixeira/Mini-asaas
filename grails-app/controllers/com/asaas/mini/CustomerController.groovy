@@ -19,7 +19,7 @@ class CustomerController {
     // }
 
     @Secured(['ROLE_USER','ROLE_OWNER'])
-    def index(Long id) {
+    def index() {
         User user = getAuthenticatedUser()
         Customer customer = user.customer
         respond customer ?: notFound()
