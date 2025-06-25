@@ -14,7 +14,6 @@ class CustomerService {
 
         customer.name = params.name
         customer.email = params.email
-        customer.phoneNumber = params.phoneNumber
         customer.cpfCnpj = params.cpfCnpj
         customer.state = params.state
         customer.city = params.city
@@ -48,7 +47,6 @@ class CustomerService {
 
         customer.name = params.name
         customer.email = params.email
-        customer.phoneNumber = params.phoneNumber
         customer.cpfCnpj = params.cpfCnpj
         customer.state = params.state
         customer.city = params.city
