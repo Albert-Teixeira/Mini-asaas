@@ -50,7 +50,6 @@ class AuthenticationController {
 
     @Secured('ROLE_OWNER')
     def manage() {
-
         User owner = getAuthenticatedUser()
         Customer accountOwner = owner.customer
 
@@ -70,12 +69,7 @@ class AuthenticationController {
         User owner = getAuthenticatedUser()
         Customer accountOwner = owner.customer
 
-        Invitation invitation = new Invitation(
-            email: params.email,
-            customer: accountOwner,
-            expired: false)
-        
-        invitation.save(failOnError: true)
+        Invitation invitation = invitationService.createInvitation(params.email,accountOwner)
 
         sendMail {
             to params.email
@@ -149,7 +143,7 @@ class AuthenticationController {
         User user
 
         try {
-            authenticationService.expireInvitation(invitation)
+            invitationService.expireInvitation(invitation)
             user = authenticationService.registerUserAndCustomer(email, password, customer, Role.get(2))
         } catch (Exception e) {
             println(e.getMessage())
