@@ -45,14 +45,6 @@ class PaymentService {
         return payments
     }
 
-    List<Payment> getPaymentsByPayer(Payer payer) {
-        List<Payment> payments = Payment.findAll {
-            payer == payer
-        }
-
-        return payments
-    }
-
     List<Payment> getPaymentsByCustomerAndPayer(Customer customer, Payer payer) {
         List<Payment> payments = Payment.findAll {
             customer == customer
