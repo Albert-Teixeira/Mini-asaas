@@ -57,6 +57,7 @@ dependencies {
     implementation "org.hibernate:hibernate-core:5.5.7.Final"
     implementation "org.grails.plugins:events"
     implementation "org.grails.plugins:gsp"
+    implementation "org.grails.plugins:spring-security-core:4.0.3"
     implementation "org.grails.plugins:quartz:3.0.0"
     implementation "me.paulschwarz:spring-dotenv:4.0.0"
     profile "org.grails.profiles:web"
