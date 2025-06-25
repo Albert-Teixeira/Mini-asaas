@@ -16,11 +16,7 @@ class AuthenticationController {
     }
 
     def mail() {
-        sendMail {
-            to "test@test.com"
-            subject "Hello John"
-            html "<b>Hello</b> World"
-        }
+        
         render "email enviado com sucesso"
     }
 
@@ -57,7 +53,7 @@ class AuthenticationController {
             postalCode: postalCode)
 
         try {
-            user = authenticationService.registerUserAndCustomer(email, password, customer)
+            user = authenticationService.registerUserAndCustomer(email, password, customer, Role.get(1))
         } catch (Exception e) {
             println(e.getMessage())
             request.status = 500
@@ -90,15 +86,20 @@ class AuthenticationController {
         User owner = getAuthenticatedUser()
         Customer accountOwner = owner.customer
 
-        Invitation invitation = new Invitation(email=params.email,
-            customer=accountOwner,
-            expired=false)
+        Invitation invitation = new Invitation(
+            email: params.email,
+            customer: accountOwner,
+            expired: false)
         
-        
-        
-        //send email with invitation object to email service and in email service send email to user with link /authentication/invitation
+        invitation.save(failOnError: true)
 
-        render "convite enviado"
+        sendMail {
+            to params.email
+            subject "Hello John"
+            html view: 'invitemail', model: [invitation: invitation]
+        }
+
+        redirect(action: "manage")
     }
 
     def invitation() {
@@ -164,7 +165,7 @@ class AuthenticationController {
         User user
 
         try {
-            user = authenticationService.registerUserAndCustomer(email, password, customer)
+            user = authenticationService.registerUserAndCustomer(email, password, customer, Role.get(2))
         } catch (Exception e) {
             println(e.getMessage())
             request.status = 500

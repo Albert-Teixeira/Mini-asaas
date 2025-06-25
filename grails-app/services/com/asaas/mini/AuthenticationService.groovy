@@ -5,8 +5,7 @@ import grails.gorm.transactions.Transactional
 @Transactional
 class AuthenticationService {
 
-    User registerUserAndCustomer(String username, String password, Customer customer) {
-        Role userRole = Role.get(1)
+    User registerUserAndCustomer(String username, String password, Customer customer, Role userRole) {
         User user = new User(username: username, password: password, customer: customer).save()
         if(!user){
             throw new IllegalArgumentException("Este email já está em uso")
