@@ -4,6 +4,9 @@ import grails.converters.JSON
 
 import java.text.SimpleDateFormat
 
+import grails.plugin.springsecurity.annotation.Secured
+
+@Secured(['ROLE_USER','ROLE_OWNER'])
 class PaymentController {
 
     PaymentService paymentService
