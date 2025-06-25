@@ -37,6 +37,7 @@ class PayerService {
             throw new ValidationException("Dados de pagador inválidos: ${errors.join(', ')}", payer.errors)
         }
 
+        payer.customer = Customer.get(params.customer.id)
         payer.name = params.name
         payer.email = params.email
         payer.phoneNumber = params.phoneNumber
@@ -64,6 +65,7 @@ class PayerService {
             throw new ValidationException("Dados de pagador inválidos: ${errors.join(', ')}", payer.errors)
         }
 
+        payer.customer = Customer.get(params.customer.id)
         payer.name = params.name
         payer.email = params.email
         payer.phoneNumber = params.phoneNumber

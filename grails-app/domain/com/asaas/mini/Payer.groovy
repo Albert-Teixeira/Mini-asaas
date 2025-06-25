@@ -4,6 +4,8 @@ import com.asaas.mini.utils.BaseEntity
 
 class Payer extends BaseEntity {
 
+    Customer customer
+
     String name
     String email
     String phoneNumber
@@ -16,6 +18,7 @@ class Payer extends BaseEntity {
     String complement
     
     static constraints = {
+        customer blank: false;
         name blank: false, maxSize: 100;
         email blank: false, email: true, maxSize: 100;
         phoneNumber blank: false, maxSize: 20;
