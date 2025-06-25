@@ -45,7 +45,7 @@ class PayerService {
         payer.state = params.state
         payer.city = params.city
         payer.street = params.street
-        payer.addressNumber = params.addressNumber ? params.addressNumber.toInteger() : null
+        payer.addressNumber = params.addressNumber ? Integer.parseInt(params.addressNumber) : null
         payer.postalCode = params.postalCode
 
         if (!payer.validate()) {
@@ -73,7 +73,7 @@ class PayerService {
         payer.state = params.state
         payer.city = params.city
         payer.street = params.street
-        payer.addressNumber = params.addressNumber ? params.addressNumber.toInteger() : null
+        payer.addressNumber = params.addressNumber ? Integer.parseInt(params.addressNumber) : null
         payer.postalCode = params.postalCode
 
         if (!payer.validate()) {
@@ -118,7 +118,7 @@ class PayerService {
         if (!params.street) {
             errors << "Rua é obrigatória"
         }
-        if (!params.addressNumber || params.addressNumber.trim().isEmpty() || params.addressNumber < 1 || params.addressNumber > 99999) {
+        if (!params.addressNumber || params.addressNumber.trim().isEmpty() || Integer.parseInt(params.addressNumber) < 1 || Integer.parseInt(params.addressNumber) > 99999) {
             errors << "Número do endereço deve ser um inteiro entre 1 e 99999"
         }
         if (!params.postalCode || !(params.postalCode ==~/\d{5}-?\d{3}/)) {
