@@ -155,6 +155,7 @@ class AuthenticationController {
         render "Parabéns '${user.username}', agora você possui acesso à conta"
     }
 
+    @Secured('ROLE_OWNER')
     def remove() {
         if(!params.id){
             render "Falta o parâmetro id"
