@@ -18,7 +18,7 @@
             <label>Email:</label>
             <g:field type="email" name="email"/><br>
 
-            <g:actionSubmit value="Adicionar usuário" action="invite"/>
+            <g:actionSubmit value="Enviar convite" action="invite"/>
         </g:form>
     </body>
 </html>

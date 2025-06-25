@@ -20,6 +20,13 @@ class AuthenticationService {
         return user
     }
 
+    void expireInvitation(Invitation invitation){
+        invitation.expired=true
+        println('aqu1')
+        invitation.save(failOnError: true)
+        println('aqu2')
+    }
+
     void deleteUser(User user){
         if(user.getAuthorities()[0].authority == "ROLE_OWNER"){
             throw new IllegalArgumentException("Não pode deletar o dono")

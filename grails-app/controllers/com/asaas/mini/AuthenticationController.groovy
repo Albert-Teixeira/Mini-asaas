@@ -165,6 +165,7 @@ class AuthenticationController {
         User user
 
         try {
+            authenticationService.expireInvitation(invitation)
             user = authenticationService.registerUserAndCustomer(email, password, customer, Role.get(2))
         } catch (Exception e) {
             println(e.getMessage())
@@ -172,9 +173,6 @@ class AuthenticationController {
             render("Ocorreu um erro ao cadastrar o usuário")
             return
         }
-
-        invitation.expired = true
-        invitation.save()
 
         render "Parabéns '${user.username}', agora você possui acesso à conta"
     }
@@ -197,6 +195,6 @@ class AuthenticationController {
             return
         }
 
-        render("Usuário removido com sucesso")
+        redirect(action: "manage")
     }
 }
