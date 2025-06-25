@@ -25,7 +25,7 @@ class PaymentController {
     def index() {
         User user = getAuthenticatedUser()
         Customer customer = user.customer
-        
+
         Boolean deleted = (params.deleted == "1")
         List<Payment> paymentList = paymentService.getPaymentsByCustomer(customer,deleted)
 
@@ -57,7 +57,25 @@ class PaymentController {
     }
 
     def edit() {
-        def payment = Payment.get(params.id)
+        if(!params.id){
+            response.status = 400
+            render([erro: "O parâmetro id está faltando"] as JSON)
+            return
+        }
+        
+        User user = getAuthenticatedUser()
+        Customer customer = user.customer
+
+        Integer id = Integer.parseInt(params.id)
+
+        Payment payment = Payment.find {
+            id == id
+            customer == customer
+        }
+
+        if(!payment){
+            redirect(view: "index")
+        }
 
         render(view: "edit", model: [payment: payment])
     }
@@ -108,7 +126,18 @@ class PaymentController {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm")
         Date dueDate = format.parse(params.due_date)
         
-        Payment payment = Payment.get(params.id)
+        User user = getAuthenticatedUser()
+        Customer customer = user.customer
+
+        Payment payment = Payment.find {
+            id == id
+            customer == customer
+        }
+
+        if(!payment){
+            redirect(view: index)
+        }
+
         payment = paymentService.editPayment(payment, value, dueDate)
 
         if(!payment){
