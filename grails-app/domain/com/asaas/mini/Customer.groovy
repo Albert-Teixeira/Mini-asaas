@@ -1,19 +1,8 @@
 package com.asaas.mini
 
-import com.asaas.mini.utils.BaseEntity
+import com.asaas.mini.utils.BasePersonalData
 
-class Customer extends BaseEntity {
-
-    String name
-    String email
-    String phoneNumber
-    String cpfCnpj
-    String state
-    String city
-    String street
-    Integer addressNumber
-    String postalCode
-    String complement
+class Customer extends BasePersonalData {
 
     static constraints = {
 
