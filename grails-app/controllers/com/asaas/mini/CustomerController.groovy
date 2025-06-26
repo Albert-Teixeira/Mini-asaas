@@ -54,22 +54,27 @@ class CustomerController {
     }
 
     @Secured(['ROLE_USER','ROLE_OWNER'])
-    def edit(Long id) {
-        respond customerService.get(id)
+    def edit() {
+        User user = getAuthenticatedUser()
+        Customer customer = user.customer
+
+        respond customer
     }
 
     @Secured(['ROLE_USER','ROLE_OWNER'])
     def update() {
+        
+        User user = getAuthenticatedUser()
+        Customer customer = user.customer
 
         try{
-            Customer customer = customerService.update(Customer.get(params.id), params)
+            customer = customerService.update(customer, params)
 
             request.withFormat {
                 form multipartForm {
                     flash.message = message(code: 'default.updated.message', args: [message(code: 'customer.label', default: 'Customer'), customer.id])
-                    redirect customer
+                    redirect(view: "index")
                 }
-                '*'{ respond customer, [status: OK] }
             }
         } catch (ValidationException e) {
             flash.message = "Erro de validação: ${e.message}"

@@ -40,7 +40,7 @@
             <f:display bean="customer" />
             <g:form resource="${this.customer}" method="DELETE">
                 <fieldset class="buttons">
-                    <g:link class="edit" action="edit" resource="${this.customer}">
+                    <g:link class="edit" action="edit">
                         <g:message code="default.button.edit.label" default="Edit" />
                     </g:link>
                     <input class="delete" type="submit" value="${message(code: 'default.button.delete.label', default: 'Deletar')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Você tem certeza?')}');" />
