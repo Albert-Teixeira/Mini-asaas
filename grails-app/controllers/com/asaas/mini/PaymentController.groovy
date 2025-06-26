@@ -154,8 +154,18 @@ class PaymentController {
             render([erro: "O parâmetro id está faltando"] as JSON)
         }
 
+        User user = getAuthenticatedUser()
+        Customer customer = user.customer
+
         Integer id = Integer.parseInt(params.id)
-        Payment payment = Payment.get(id)
+        Payment payment = Payment.find{
+            id == id
+            customer == customer
+        }
+
+        if(!payment){
+            redirect(view: "index")
+        }
 
         Boolean deleted = paymentService.deletePayment(payment)
 
