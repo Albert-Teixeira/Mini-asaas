@@ -102,8 +102,8 @@ dataSource:
     jmxExport: true
     driverClassName: com.mysql.jdbc.Driver
     dialect: org.hibernate.dialect.MySQL5InnoDBDialect
-    username: root
-    password: basedeelite
+    username: ${DB_USER}
+    password: ${DB_PASS}
     dbCreate: update
     url: jdbc:mysql://127.0.0.1:3306/miniasaas
 
