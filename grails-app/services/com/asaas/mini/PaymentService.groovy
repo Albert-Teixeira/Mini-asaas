@@ -54,7 +54,7 @@ class PaymentService {
         return payments
     }
 
-    Payment editPayment(Payment payment, Double value, Date dueDate) {
+    Payment editPayment(Payment payment, Date dueDate) {
 
         Date today = new Date()
         if(dueDate.before(today)){
@@ -62,7 +62,6 @@ class PaymentService {
         }
 
         try {
-            payment.value = value
             payment.dueDate = dueDate
             payment.save(failOnError: true)
         } catch (Exception e) {

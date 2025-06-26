@@ -15,11 +15,12 @@ class PaymentController {
         create: "GET",
         edit: "GET",
         save: "POST",
-        update: "POST",
+        update: "PUT",
         remove: "GET",
         restore: "GET",
         confirm: "GET"]
 
+    //foi
     def index() {
         User user = getAuthenticatedUser()
         Customer customer = user.customer
@@ -30,6 +31,7 @@ class PaymentController {
         render(view: "index", model: [paymentList: paymentList, statusType: StatusType, deleted: deleted])
     }
 
+    //foi
     def show() {
         if(!params.id){
             response.status = 400
@@ -56,6 +58,7 @@ class PaymentController {
         render(view: "show", model: [payment: payment, statusType: StatusType])
     }
 
+    //foi
     def create() {
         User user = getAuthenticatedUser()
         Customer customer = user.customer
@@ -66,7 +69,7 @@ class PaymentController {
         render(view: "create", model: [payment: new Payment(), payerList: payerList, paymentTypeList: PaymentType.values()])
     }
 
-    //dps
+    //foi
     def edit() {
         if(!params.id){
             response.status = 400
@@ -96,7 +99,6 @@ class PaymentController {
         PaymentType paymentType = PaymentType.valueOf(params.paymentType)
         Double value = Double.parseDouble(params.value)
         Calendar cal = Calendar.getInstance()
-        Integer month = Integer.parseInt(params.myDate_month) 
 
         cal.set(
             params.myDate_year as Integer,
@@ -143,7 +145,7 @@ class PaymentController {
         redirect(action: "show", id: payment.id)
     }
 
-    //dps
+    //foi
     def update() {
         if(!params.id){
             response.status = 400
@@ -151,9 +153,18 @@ class PaymentController {
         }
 
         Integer id = Integer.parseInt(params.id)
-        Double value = Double.parseDouble(params.value)
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm")
-        Date dueDate = format.parse(params.due_date)
+
+        Calendar cal = Calendar.getInstance()
+
+        cal.set(
+            params.myDate_year as Integer,
+            params.myDate_month as Integer - 1,
+            params.myDate_day as Integer,
+            params.myDate_hour as Integer,
+            params.myDate_minute as Integer,
+            0)
+
+        Date dueDate = cal.getTime();
         
         User user = getAuthenticatedUser()
         Customer customer = user.customer
@@ -167,7 +178,7 @@ class PaymentController {
             redirect(view: index)
         }
 
-        payment = paymentService.editPayment(payment, value, dueDate)
+        payment = paymentService.editPayment(payment, dueDate)
 
         if(!payment){
             response.status = 400
