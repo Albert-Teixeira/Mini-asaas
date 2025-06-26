@@ -3,6 +3,7 @@ import grails.validation.ValidationException
 import static org.springframework.http.HttpStatus.*
 import grails.plugin.springsecurity.annotation.Secured
 
+@Secured(['ROLE_USER','ROLE_OWNER'])
 class CustomerController {
 
     CustomerService customerService
@@ -18,19 +19,19 @@ class CustomerController {
     //     respond customerService.list(params), model:[customerCount: customerService.count()]
     // }
 
-    @Secured(['ROLE_USER','ROLE_OWNER'])
+    //protegi
     def index() {
         User user = getAuthenticatedUser()
         Customer customer = user.customer
         respond customer ?: notFound()
     }
 
-    @Secured(['ROLE_USER','ROLE_OWNER'])
+    //vai sair
     def create() {
         respond new Customer(params)
     }
 
-    @Secured(['ROLE_USER','ROLE_OWNER'])
+    //vai sair
     def save() {
         try{
             Customer customer = customerService.save(params)
@@ -53,7 +54,7 @@ class CustomerController {
         }
     }
 
-    @Secured(['ROLE_USER','ROLE_OWNER'])
+    //protegi
     def edit() {
         User user = getAuthenticatedUser()
         Customer customer = user.customer
@@ -61,7 +62,8 @@ class CustomerController {
         respond customer
     }
 
-    @Secured(['ROLE_USER','ROLE_OWNER'])
+
+    //protegi
     def update() {
         
         User user = getAuthenticatedUser()
@@ -87,7 +89,7 @@ class CustomerController {
         }
     }
 
-    @Secured(['ROLE_USER','ROLE_OWNER'])
+    //vai sair
     def delete(Long id) {
         if (id == null) {
             notFound()
@@ -123,7 +125,6 @@ class CustomerController {
         }
     }
 
-    @Secured(['ROLE_USER','ROLE_OWNER'])
     protected void notFound() {
         request.withFormat {
             form multipartForm {

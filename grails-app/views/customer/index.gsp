@@ -19,13 +19,8 @@
                     </a>
                 </li>
                 <li>
-                    <g:link class="list" action="index">
-                        <g:message code="default.list.label" args="[entityName]" />
-                    </g:link>
-                </li>
-                <li>
-                    <g:link class="create" action="create">
-                        <g:message code="default.new.label" args="[entityName]" />
+                    <g:link class="list" controller="authentication" action="manage">
+                        Gerenciamento de usuários
                     </g:link>
                 </li>
             </ul>
@@ -38,14 +33,11 @@
                 <div class="message" role="status">${flash.message}</div>
             </g:if>
             <f:display bean="customer" />
-            <g:form resource="${this.customer}" method="DELETE">
-                <fieldset class="buttons">
-                    <g:link class="edit" action="edit">
-                        <g:message code="default.button.edit.label" default="Edit" />
-                    </g:link>
-                    <input class="delete" type="submit" value="${message(code: 'default.button.delete.label', default: 'Deletar')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Você tem certeza?')}');" />
-                </fieldset>
-            </g:form>
+            <fieldset class="buttons">
+                <g:link class="edit" action="edit">
+                    <g:message code="default.button.edit.label" default="Edit" />
+                </g:link>
+            </fieldset>
         </div>
     </body>
 </html>

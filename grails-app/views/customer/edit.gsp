@@ -19,13 +19,8 @@
                     </a>
                 </li>
                 <li>
-                    <g:link class="list" action="index">
-                        <g:message code="default.list.label" args="[entityName]" />
-                    </g:link>
-                </li>
-                <li>
-                    <g:link class="create" action="create">
-                        <g:message code="default.new.label" args="[entityName]" />
+                    <g:link class="list" controller="authentication" action="manage">
+                        Gerenciamento de usuários
                     </g:link>
                 </li>
             </ul>
