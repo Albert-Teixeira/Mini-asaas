@@ -1,10 +1,8 @@
 package com.asaas.mini
 
 import grails.converters.JSON
-
-import java.text.SimpleDateFormat
-
 import grails.plugin.springsecurity.annotation.Secured
+import java.text.SimpleDateFormat
 
 @Secured(['ROLE_USER','ROLE_OWNER'])
 class PaymentController {
@@ -39,9 +37,15 @@ class PaymentController {
             return
         }
 
+        User user = getAuthenticatedUser()
+        Customer customer = user.customer
+
         Integer id = Integer.parseInt(params.id)
 
-        Payment payment = Payment.get(params.id)
+        Payment payment = Payment.find {
+            id == id
+            customer == customer
+        }
 
         if(!payment){
             response.status = 404
@@ -53,9 +57,16 @@ class PaymentController {
     }
 
     def create() {
-        render(view: "create")
+        User user = getAuthenticatedUser()
+        Customer customer = user.customer
+        List<Payer> payerList = Payer.findAll {
+            customer == customer
+        }
+        
+        render(view: "create", model: [payment: new Payment(), payerList: payerList, paymentTypeList: PaymentType.values()])
     }
 
+    //dps
     def edit() {
         if(!params.id){
             response.status = 400
@@ -81,12 +92,21 @@ class PaymentController {
     }
 
     def save() {
-
-        Integer payerId = Integer.parseInt(params.payer_id)
-        PaymentType paymentType = PaymentType.valueOf(params.payment_type)
+        Integer payerId = Integer.parseInt(params.payer)
+        PaymentType paymentType = PaymentType.valueOf(params.paymentType)
         Double value = Double.parseDouble(params.value)
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
-        Date dueDate = format.parse(params.due_date);
+        Calendar cal = Calendar.getInstance()
+        Integer month = Integer.parseInt(params.myDate_month) 
+
+        cal.set(
+            params.myDate_year as Integer,
+            params.myDate_month as Integer - 1,
+            params.myDate_day as Integer,
+            params.myDate_hour as Integer,
+            params.myDate_minute as Integer,
+            0)
+
+        Date dueDate = cal.getTime();
 
         if(!payerId || !paymentType || !value || !dueDate){
             String errorMessage = "Faltam os parâmetros:"
@@ -102,7 +122,15 @@ class PaymentController {
         User user = getAuthenticatedUser()
         Customer customer = user.customer
 
-        Payer payer = Payer.get(payerId)
+        Payer payer = Payer.find {
+            id == payerId
+            customer == customer
+        }
+
+        if(!payer){
+            response.status = 400
+            render([erro: "Não foi possível criar o pagamento"] as JSON)
+        }
 
         Payment payment = paymentService.createPayment(customer, payer, paymentType, value, dueDate)
 
@@ -115,6 +143,7 @@ class PaymentController {
         redirect(action: "show", id: payment.id)
     }
 
+    //dps
     def update() {
         if(!params.id){
             response.status = 400

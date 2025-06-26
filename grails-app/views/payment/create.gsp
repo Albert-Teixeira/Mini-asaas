@@ -6,26 +6,21 @@
         <title>Criar Cobrança</title>
     </head>
     <body>
-        <form action="${createLink(action: "save")}" method="post">
-            <label for="payer_id">Id do pagador:</label><br>
-            <input type="text" id="payer_id" name="payer_id"><br>
-
-            <label for="payment_type">Selecione o tipo de pagamento:</label><br>
-            <select id="payment_type" name="payment_type">
-                <option value="BANK_SLIP">BANK_SLIP</option>
-                <option value="CREDIT_CARD">CREDIT_CARD</option>
-                <option value="PIX">PIX</option>
-                <option value="MONEY">MONEY</option>
-            </select><br>
-
-            <label for="value">Valor:</label><br>
-            <input type="text" id="value" name="value"><br>
-
-            <label for="due_date">Data de vencimento:</label><br>
-            <input type="datetime-local" id="due_date" name="due_date"/>
-
-            <input type="submit" value="Submit">
-        </form>
+        <g:form resource="${this.payment}" method="POST">
+            <fieldset class="form">
+                <p>Valor: </p>
+                <g:field type="number" name="value" min="0" required="true" value="${bookInstance?.isbn}"/>
+                <p>Tipo de Cobrança: </p>
+                <g:select name="paymentType" from="${paymentTypeList}" />
+                <p>Quem vai pagar: </p>
+                <g:select optionKey="id" optionValue="name" name="payer" from="${payerList}" />
+                <p>Data de vencimento: </p>
+                Due Date * <g:datePicker name="myDate" value="${new Date()}" noSelection="['':'-Choose-']"/>
+            </fieldset>
+            <fieldset class="buttons">
+                <g:submitButton name="create" class="save" value="${message(code: 'default.button.create.label', default: 'Criar')}" />
+            </fieldset>
+        </g:form>
         <a href="${createLink(action:"index")}">Voltar</a>
     </body>
 </html>
