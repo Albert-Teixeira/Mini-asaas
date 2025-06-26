@@ -21,7 +21,13 @@ class PayerController {
     }
 
     def show(Long id) {
-        Payer payer = Payer.get(id)
+        User user = getAuthenticatedUser()
+        Customer customer = user.customer
+
+        Payer payer = Payer.find {
+            id == id
+            customer == customer
+        }
         respond payer ?: notFound()
     }
 
