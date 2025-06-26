@@ -1,25 +1,13 @@
 package com.asaas.mini
 
-import com.asaas.mini.utils.BaseEntity
+import com.asaas.mini.utils.BasePersonalData
 
-class Customer extends BaseEntity {
-
-    String name
-    String email
-    String phoneNumber
-    String cpfCnpj
-    String state
-    String city
-    String street
-    Integer addressNumber
-    String postalCode
-    String complement
+class Customer extends BasePersonalData {
 
     static constraints = {
 
         name blank: false, maxSize: 100;
         email blank: false, email: true, maxSize: 100;
-        phoneNumber blank: false, maxSize: 20;
         cpfCnpj blank: false, maxSize: 20;
         state blank: false, maxSize: 50;
         city blank: false, maxSize: 50;

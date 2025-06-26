@@ -6,13 +6,13 @@ abstract class BasePersonalData extends BaseEntity {
 
     String name
     String email
-    String phoneNumber
     String cpfCnpj
     String state
     String city
     String street
-    Integer houseNumber
+    Integer addressNumber
     String postalCode
+    String complement
 
     static mapping = {
         tablePerHierarchy false
