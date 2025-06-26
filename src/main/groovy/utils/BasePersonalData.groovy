@@ -11,8 +11,9 @@ abstract class BasePersonalData extends BaseEntity {
     String state
     String city
     String street
-    Integer houseNumber
+    Integer addressNumber
     String postalCode
+    String complement
 
     static mapping = {
         tablePerHierarchy false

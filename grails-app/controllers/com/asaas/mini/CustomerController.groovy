@@ -23,7 +23,8 @@ class CustomerController {
     }
 
     def save() {
-        try{
+
+        try {
             Customer customer = customerService.save(params)
 
             request.withFormat {
@@ -34,24 +35,26 @@ class CustomerController {
                 '*' { respond customer, [status: CREATED] }
             }
         } catch (ValidationException e) {
-            flash.message = "Erro de validação: ${e.message}"
-            respond customer, view:'create'
+            flash.message = "Erro de Validação: ${e.message}"
+            respond new Customer(params), view:'create'
             return
         } catch (Exception e) {
-            flash.message = "Erro ao salvar cliente: ${e.message}"
-            respond customer, view:'create'
+            flash.message = "Erro ao salvar o cliente: ${e.message}"
+            respond new Customer(params), view:'create'
             return
         }
     }
+
 
     def edit(Long id) {
         respond customerService.get(id)
     }
 
     def update() {
+        Customer customer = Customer.get(params.id)
 
-        try{
-            Customer customer = customerService.update(Customer.get(params.id), params)
+        try {
+            customer = customerService.update(customer, params)
 
             request.withFormat {
                 form multipartForm {
@@ -71,6 +74,7 @@ class CustomerController {
         }
     }
 
+
     def delete(Long id) {
         if (id == null) {
             notFound()
@@ -87,14 +91,7 @@ class CustomerController {
                 }
                 '*'{ render status: NO_CONTENT }
             }
-        } catch (Exception e) {
-            flash.message = e.message
-            request.withFormat {
-                form multipartForm {
-                    redirect action: "index", method: "GET"
-                }
-                '*'{ render status: NOT_FOUND }
-            }
+
         } catch (IllegalArgumentException e) {
             flash.message = "Invalid ID: ${e.message}"
             request.withFormat {
@@ -102,6 +99,14 @@ class CustomerController {
                     redirect action: "index", method: "GET"
                 }
                 '*'{ render status: BAD_REQUEST }
+            }
+        } catch (Exception e) {
+            flash.message = e.message
+            request.withFormat {
+                form multipartForm {
+                    redirect action: "index", method: "GET"
+                }
+                '*'{ render status: NOT_FOUND }
             }
         }
     }
