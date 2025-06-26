@@ -14,8 +14,10 @@ class PayerController {
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
     def index(Integer max) {
-        params.max = Math.min(max ?: 10, 100)
-        respond payerService.list(params), model:[payerCount: payerService.count()]
+        User user = getAuthenticatedUser()
+        Customer customer = user.customer
+
+        respond payerService.list(customer)
     }
 
     def show(Long id) {

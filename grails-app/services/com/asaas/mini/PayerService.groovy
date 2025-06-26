@@ -12,8 +12,10 @@ class PayerService {
         Payer.get(id)
     }
 
-    List<Payer> list(Map params) {
-        Payer.list(params)
+    List<Payer> list(Customer customer) {
+        Payer.findAll {
+            customer==customer
+        }
     }
 
     Long count(){
