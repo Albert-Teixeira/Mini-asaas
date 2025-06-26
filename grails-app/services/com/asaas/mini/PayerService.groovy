@@ -22,8 +22,11 @@ class PayerService {
         Payer.count()
     }
 
-    void delete(Serializable id) {
-        Payer payer = Payer.get(id)
+    void delete(Customer customer, Serializable id) {
+        Payer payer = Payer.find{
+            id == id
+            customer == customer
+        }
         if (payer) {
             payer.delete(flush: true)
         } else {

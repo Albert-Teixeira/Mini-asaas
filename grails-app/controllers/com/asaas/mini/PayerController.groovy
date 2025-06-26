@@ -108,8 +108,11 @@ class PayerController {
             return
         }
 
+        User user = getAuthenticatedUser()
+        Customer customer = user.customer
+
         try {
-            payerService.delete(id)
+            payerService.delete(customer,id)
 
             request.withFormat {
                 form multipartForm {
