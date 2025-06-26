@@ -4,7 +4,9 @@ import grails.validation.ValidationException
 import grails.web.http.HttpHeaders
 import groovy.lang.MissingMethodException
 import static org.springframework.http.HttpStatus.*
+import grails.plugin.springsecurity.annotation.Secured
 
+@Secured(['ROLE_USER','ROLE_OWNER'])
 class PayerController {
 
     PayerService payerService

@@ -8,7 +8,7 @@ class CustomerController {
 
     CustomerService customerService
 
-    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
+    static allowedMethods = [update: "PUT"]
 
     def index() {
         User user = getAuthenticatedUser()
