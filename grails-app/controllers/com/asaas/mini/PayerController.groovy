@@ -13,7 +13,7 @@ class PayerController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
-    def index(Integer max) {
+    def index() {
         User user = getAuthenticatedUser()
         Customer customer = user.customer
 
@@ -36,9 +36,11 @@ class PayerController {
     }
 
     def save() {
-
+        User user = getAuthenticatedUser()
+        Customer customer = user.customer
+        
         try {
-            Payer payer = payerService.save(params)
+            Payer payer = payerService.save(customer,params)
 
             request.withFormat {
                 form multipartForm {

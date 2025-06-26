@@ -31,7 +31,7 @@ class PayerService {
         }
     }
 
-    Payer save(Map params) {
+    Payer save(Customer customer, Map params) {
         Payer payer = new Payer()
 
         List<String> errors = validatePayerParams(params)
@@ -39,7 +39,7 @@ class PayerService {
             throw new ValidationException("Dados de pagador inválidos: ${errors.join(', ')}", payer.errors)
         }
 
-        payer.customer = Customer.get(params.customer.id)
+        payer.customer = customer
         payer.name = params.name
         payer.email = params.email
         payer.phoneNumber = params.phoneNumber
