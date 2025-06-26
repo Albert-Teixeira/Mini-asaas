@@ -61,12 +61,28 @@ class PayerController {
     }
 
     def edit(Long id) {
-        respond payerService.reload(id)
+        User user = getAuthenticatedUser()
+        Customer customer = user.customer
+
+        respond payerService.reload(customer,id)
     }
 
     def update() {
+        User user = getAuthenticatedUser()
+        Customer customer = user.customer
+
+        Payer payer = Payer.find {
+            id == params.id
+            customer == customer
+        }
+
+        if(!payer){
+            redirect(view: "edit", id: params.id)
+            return
+        }
+
         try {
-            Payer payer = payerService.update(Payer.get(params.id), params)
+            payer = payerService.update(customer, payer, params)
 
             request.withFormat {
                 form multipartForm {

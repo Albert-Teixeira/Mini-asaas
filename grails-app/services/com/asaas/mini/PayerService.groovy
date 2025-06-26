@@ -57,7 +57,7 @@ class PayerService {
         return payer
     }
 
-    Payer update(Payer payer, Map params) {
+    Payer update(Customer customer, Payer payer, Map params) {
         if (payer == null) {
             throw new IllegalArgumentException("Pagador não pode ser nulo para atualizá-lo")
         }
@@ -67,7 +67,7 @@ class PayerService {
             throw new ValidationException("Dados de pagador inválidos: ${errors.join(', ')}", payer.errors)
         }
 
-        payer.customer = Customer.get(params.customer.id)
+        payer.customer = customer
         payer.name = params.name
         payer.email = params.email
         payer.phoneNumber = params.phoneNumber
@@ -87,8 +87,11 @@ class PayerService {
         return payer
     }
 
-    Payer reload(Serializable id) {
-        Payer payer = Payer.get(id)
+    Payer reload(Customer customer, Serializable id) {
+        Payer payer = Payer.find {
+            id == id
+            customer == customer
+        }
         if (payer) {
             Payer.withSession { session ->
                 session.refresh(payer)
