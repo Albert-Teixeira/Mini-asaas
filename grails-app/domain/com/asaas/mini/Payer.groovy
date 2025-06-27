@@ -25,4 +25,14 @@ class Payer extends BasePersonalData {
     static mapping = {
         table 'payer'
     }
+
+    void softDelete() {
+        this.deleted = true
+        this.save(flush: true)
+    }
+
+    void restore() {
+        this.deleted = false
+        this.save(flush: true)
+    }
 }

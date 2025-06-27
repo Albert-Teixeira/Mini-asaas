@@ -20,13 +20,27 @@ class PayerService {
         Payer.count()
     }
 
-    void delete(Serializable id) {
+    void delete(Long id) {
         Payer payer = Payer.get(id)
-        if (payer) {
-            payer.delete(flush: true)
-        } else {
-            throw IllegalArgumentException("Pagador com id ${id} não encontrado")
+        if (!payer) {
+            throw new IllegalArgumentException("Pagador com id ${id} não encontrado")
         }
+
+        payer.softDelete()
+    }
+
+    Payer restore(Long id) {
+        Payer payer = Payer.get(id)
+        if (!payer) {
+            throw new IllegalArgumentException("Pagador com id ${id} não encontrado")
+        }
+
+        payer.restore()
+        return payer
+    }
+
+    List<Payer> listDeleted(Map params = [:]) {
+        return Payer.where { deleted == true }.list(params)
     }
 
     Payer save(Map params) {
@@ -65,6 +79,7 @@ class PayerService {
             throw new ValidationException("Dados de pagador inválidos: ${errors.join(', ')}", payer.errors)
         }
 
+        payer.deleted = params.deleted in ['true', true, 'on']
         payer.customer = Customer.get(params.customer.id)
         payer.name = params.name
         payer.email = params.email

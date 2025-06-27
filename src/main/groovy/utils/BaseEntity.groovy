@@ -8,6 +8,10 @@ abstract class BaseEntity {
     Date lastUpdated
     Boolean deleted = false
 
+    static constraints = {
+        deleted nullable: false
+    }
+
     static mapping = {
         tablePerHierarchy false
     }
