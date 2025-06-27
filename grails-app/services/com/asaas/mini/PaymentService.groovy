@@ -6,6 +6,12 @@ import grails.gorm.transactions.Transactional
 class PaymentService {
 
     Payment createPayment(Customer customer, Payer payer, PaymentType paymentType, Double value, Date dueDate) {
+
+        Date today = new Date()
+        if(dueDate.before(today)){
+            return null
+        }
+
         Payment payment = new Payment(
             customer: customer,
             payer: payer,
@@ -52,6 +58,7 @@ class PaymentService {
 
         try {
             payment.dueDate = dueDate
+            payment.statusType = StatusType.PENDING
             payment.save(failOnError: true)
         } catch (Exception e) {
             println(e.getMessage())
