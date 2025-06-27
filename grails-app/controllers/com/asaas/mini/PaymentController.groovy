@@ -20,7 +20,6 @@ class PaymentController {
         restore: "PUT",
         confirm: "PUT"]
 
-    //foi
     def index() {
         User user = getAuthenticatedUser()
         Customer customer = user.customer
@@ -31,7 +30,6 @@ class PaymentController {
         render(view: "index", model: [paymentList: paymentList, statusType: StatusType, deleted: deleted])
     }
 
-    //foi
     def show() {
         if(!params.id){
             response.status = 400
@@ -58,7 +56,6 @@ class PaymentController {
         render(view: "show", model: [payment: payment, statusType: StatusType])
     }
 
-    //foi
     def create() {
         User user = getAuthenticatedUser()
         Customer customer = user.customer
@@ -69,7 +66,6 @@ class PaymentController {
         render(view: "create", model: [payment: new Payment(), payerList: payerList, paymentTypeList: PaymentType.values()])
     }
 
-    //foi
     def edit() {
         if(!params.id){
             response.status = 400
@@ -95,7 +91,6 @@ class PaymentController {
         render(view: "edit", model: [payment: payment])
     }
 
-    //foi
     def save() {
         Integer payerId = Integer.parseInt(params.payer)
         PaymentType paymentType = PaymentType.valueOf(params.paymentType)
@@ -147,7 +142,6 @@ class PaymentController {
         redirect(action: "show", id: payment.id)
     }
 
-    //foi
     def update() {
         if(!params.id){
             response.status = 400
@@ -191,7 +185,6 @@ class PaymentController {
         redirect(action: "show", id: payment.id)
     }
 
-    //foi
     def remove() {
         if(!params.id){
             response.status = 400
@@ -222,7 +215,6 @@ class PaymentController {
         redirect(action: "index")
     }
 
-    //foi
     def restore() {
         if(!params.id){
             response.status = 400
@@ -253,7 +245,6 @@ class PaymentController {
         render(view: "show", model: [payment: payment, statusType: StatusType])
     }
 
-    //falta editar view com método g:form
     def confirm() {
         if(!params.id){
             response.status = 400
