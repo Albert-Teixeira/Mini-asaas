@@ -2,6 +2,8 @@ package com.asaas.mini
 
 import grails.gorm.transactions.Transactional
 
+import java.util.stream.Collectors
+
 @Transactional
 class AuthenticationService {
 
@@ -36,9 +38,18 @@ class AuthenticationService {
         }
     }
 
-    List<User> getUsersByCustomerAccount(Customer customer){
+    List<User> getUsersByCustomerAccount(Customer customer, Boolean excludeOwner=true){
         List<User> userList = User.findAll {
             customer == customer
+        }
+
+        if(excludeOwner){
+            List<User> userListWithoutOwner = userList
+                .stream()
+                .filter(user -> user.getAuthorities()[0].authority != "ROLE_OWNER")
+                .collect(Collectors.toList())
+
+            return userListWithoutOwner
         }
 
         return userList

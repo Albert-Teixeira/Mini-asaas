@@ -48,7 +48,8 @@ class AuthenticationController {
         User owner = getAuthenticatedUser()
         Customer accountOwner = owner.customer
 
-        List<User> accountUserList = authenticationService.getUsersByCustomerAccount(accountOwner)
+        Boolean excludeOwner
+        List<User> accountUserList = authenticationService.getUsersByCustomerAccount(accountOwner, excludeOwner=true)
 
         render(view: "manage", model: [accountUserList: accountUserList])
     }
