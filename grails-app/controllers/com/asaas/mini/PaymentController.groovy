@@ -95,6 +95,7 @@ class PaymentController {
         render(view: "edit", model: [payment: payment])
     }
 
+    //foi
     def save() {
         Integer payerId = Integer.parseInt(params.payer)
         PaymentType paymentType = PaymentType.valueOf(params.paymentType)
@@ -190,7 +191,7 @@ class PaymentController {
         redirect(action: "show", id: payment.id)
     }
 
-    //falta editar view com método g:form
+    //foi
     def remove() {
         if(!params.id){
             response.status = 400
@@ -221,7 +222,7 @@ class PaymentController {
         redirect(action: "index")
     }
 
-    //falta editar view com método g:form
+    //foi
     def restore() {
         if(!params.id){
             response.status = 400
@@ -242,14 +243,7 @@ class PaymentController {
             return
         }
 
-        if(!params.due_date){
-            payment = paymentService.restorePayment(payment)
-        }
-        else{
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
-            Date dueDate = format.parse(params.due_date);
-            payment = paymentService.restorePayment(payment,dueDate)
-        }
+        payment = paymentService.restorePayment(payment)
 
         if(!payment){
             response.status = 400

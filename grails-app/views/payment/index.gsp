@@ -28,21 +28,28 @@
                 </g:if>
                 <g:elseif test="${ payment.deleted }">
                     <a href="${createLink(action:"show",id:"${payment.id}")}">Acessar pagamento</a>
-                    <a href="${createLink(action:"restore",id:"${payment.id}")}">Restaurar pagamento</a>
+
+                    <g:form action="restore" method="PUT" id="${payment.id}">
+                        <fieldset class="buttons">
+                            <input class="edit" type="submit" value="Restaurar pagamento" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Tem certeza?')}');" />
+                        </fieldset>
+                    </g:form>
                 </g:elseif>
                 <g:else>
                     <a href="${createLink(action:"show",id:"${payment.id}")}">Acessar pagamento</a>
                     <a href="${createLink(action:"edit",id:"${payment.id}")}">Editar pagamento</a>
 
-                    <%-- <a href="${createLink(action:"remove",id:"${payment.id}")}">Deletar Pagamento</a> --%>
-
-                    <g:form action="remove" method="delete" id="${payment.id}">
+                    <g:form action="remove" method="DELETE" id="${payment.id}">
                         <fieldset class="buttons">
                             <input class="delete" type="submit" value="${message(code: 'default.button.delete.label', default: 'Remover')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Tem certeza?')}');" />
                         </fieldset>
                     </g:form>
 
-                    <a href="${createLink(action:"confirm",id:"${payment.id}")}">Receber Pagamento</a>
+                    <g:form action="confirm" method="PUT" id="${payment.id}">
+                        <fieldset class="buttons">
+                            <input class="edit" type="submit" value="Receber cobrança" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Tem certeza?')}');" />
+                        </fieldset>
+                    </g:form>
                 </g:else>
                 <p>-----------------------------------------------------------</p>
             </div>

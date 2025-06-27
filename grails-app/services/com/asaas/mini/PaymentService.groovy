@@ -88,29 +88,12 @@ class PaymentService {
         return true
     }
 
-    Payment restorePayment(Payment payment, Date dueDate = null) {
+    Payment restorePayment(Payment payment) {
         if(payment.deleted == false){
             return null
         }
 
-        if(payment.statusType == StatusType.RECEIVED){
-            return null
-        }
-
-        if(payment.statusType == StatusType.OVERDUE && !dueDate){
-            return null
-        }
-
-        Date today = new Date()
-        if(dueDate && dueDate.before(today)){
-            return null
-        }
-
         try {
-            payment.statusType = StatusType.PENDING
-            if(dueDate){
-                payment.dueDate = dueDate
-            }
             payment.deleted = false
         } catch(Exception e){
             println(e.getMessage())
