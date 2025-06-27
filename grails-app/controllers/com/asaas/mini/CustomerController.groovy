@@ -16,29 +16,6 @@ class CustomerController {
         respond customer ?: notFound()
     }
 
-    //vai sair
-    // def save() {
-    //     try{
-    //         Customer customer = customerService.save(params)
-
-    //         request.withFormat {
-    //             form multipartForm {
-    //                 flash.message = message(code: 'default.created.message', args: [message(code: 'customer.label', default: 'Customer'), customer.id])
-    //                 redirect customer
-    //             }
-    //             '*' { respond customer, [status: CREATED] }
-    //         }
-    //     } catch (ValidationException e) {
-    //         flash.message = "Erro de validação: ${e.message}"
-    //         respond customer, view:'create'
-    //         return
-    //     } catch (Exception e) {
-    //         flash.message = "Erro ao salvar cliente: ${e.message}"
-    //         respond customer, view:'create'
-    //         return
-    //     }
-    // }
-
     def edit() {
         User user = getAuthenticatedUser()
         Customer customer = user.customer
