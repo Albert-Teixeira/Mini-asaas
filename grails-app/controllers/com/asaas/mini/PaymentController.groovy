@@ -89,6 +89,7 @@ class PaymentController {
 
         if(!payment){
             redirect(view: "index")
+            return
         }
 
         render(view: "edit", model: [payment: payment])
@@ -176,6 +177,7 @@ class PaymentController {
 
         if(!payment){
             redirect(view: index)
+            return
         }
 
         payment = paymentService.editPayment(payment, dueDate)
@@ -205,6 +207,7 @@ class PaymentController {
 
         if(!payment){
             redirect(view: "index")
+            return
         }
 
         Boolean deleted = paymentService.deletePayment(payment)
