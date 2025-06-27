@@ -16,9 +16,9 @@ class PaymentController {
         edit: "GET",
         save: "POST",
         update: "PUT",
-        remove: "GET",
-        restore: "GET",
-        confirm: "GET"]
+        remove: "DELETE",
+        restore: "PUT",
+        confirm: "PUT"]
 
     //foi
     def index() {
@@ -176,7 +176,7 @@ class PaymentController {
         }
 
         if(!payment){
-            redirect(view: index)
+            render([erro: "O pagamento não pôde ser editado"] as JSON)
             return
         }
 
@@ -190,6 +190,7 @@ class PaymentController {
         redirect(action: "show", id: payment.id)
     }
 
+    //falta editar view com método g:form
     def remove() {
         if(!params.id){
             response.status = 400
@@ -206,7 +207,7 @@ class PaymentController {
         }
 
         if(!payment){
-            redirect(view: "index")
+            render([erro: "O pagamento não pôde ser deletado"] as JSON)
             return
         }
 
@@ -220,14 +221,26 @@ class PaymentController {
         redirect(action: "index")
     }
 
+    //falta editar view com método g:form
     def restore() {
         if(!params.id){
             response.status = 400
             render([erro: "O parâmetro id está faltando"] as JSON)
         }
 
+        User user = getAuthenticatedUser()
+        Customer customer = user.customer
+
         Integer id = Integer.parseInt(params.id)
-        Payment payment = Payment.get(id)
+        Payment payment = Payment.find {
+            id == id
+            customer == customer
+        }
+
+        if(!payment){
+            render([erro: "O pagamento não pôde ser restaurado"] as JSON)
+            return
+        }
 
         if(!params.due_date){
             payment = paymentService.restorePayment(payment)
@@ -246,14 +259,26 @@ class PaymentController {
         render(view: "show", model: [payment: payment, statusType: StatusType])
     }
 
+    //falta editar view com método g:form
     def confirm() {
         if(!params.id){
             response.status = 400
             render([erro: "O parâmetro id está faltando"] as JSON)
         }
 
+        User user = getAuthenticatedUser()
+        Customer customer = user.customer
+
         Integer id = Integer.parseInt(params.id)
-        Payment payment = Payment.get(id)
+        Payment payment = Payment.find {
+            id == id
+            customer == customer
+        }
+
+        if(!payment){
+            render([erro: "O pagamento não pôde ser confirmado"] as JSON)
+            return
+        }
 
         Boolean confirmed = paymentService.confirmPayment(payment)
 
