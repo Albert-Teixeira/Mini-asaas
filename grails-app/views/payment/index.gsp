@@ -14,20 +14,18 @@
         </g:else>
         <g:each var="payment" in="${ paymentList }">
             <div>
-                <p>Cliente: ${payment.customer.name}</p>
                 <p>Pagador: ${payment.payer.name}</p>
                 <p>Tipo de pagamento: ${payment.paymentType}</p>
                 <p>Valor: ${payment.value}</p>
                 <p>Status: ${payment.statusType}</p>
+                <g:if test="${ payment.statusType == statusType.RECEIVED }"> <p>Data de recebimento: ${payment.dateReceived}</p> </g:if>
                 <p>Data de vencimento: ${payment.dueDate}</p>
-                <p>Data de recebimento: ${payment.dateReceived}</p>
-                <p>Deleted: ${payment.deleted}</p>
 
                 <g:if test="${ payment.statusType == statusType.RECEIVED }">
                     <a href="${createLink(action:"show",id:"${payment.id}")}">Acessar pagamento</a>
                 </g:if>
                 <g:elseif test="${ payment.deleted }">
-                    <a href="${createLink(action:"show",id:"${payment.id}")}">Acessar pagamento</a>
+                    <a href="${createLink(action:"show",id:"${payment.id}")}">Acessar pagamento</a><br><br>
 
                     <g:form action="restore" method="PUT" id="${payment.id}">
                         <fieldset class="buttons">
@@ -36,8 +34,8 @@
                     </g:form>
                 </g:elseif>
                 <g:else>
-                    <a href="${createLink(action:"show",id:"${payment.id}")}">Acessar pagamento</a>
-                    <a href="${createLink(action:"edit",id:"${payment.id}")}">Editar pagamento</a>
+                    <a href="${createLink(action:"show",id:"${payment.id}")}">Acessar pagamento</a><br><br>
+                    <a href="${createLink(action:"edit",id:"${payment.id}")}">Nova data de vencimento</a>
 
                     <g:form action="remove" method="DELETE" id="${payment.id}">
                         <fieldset class="buttons">
