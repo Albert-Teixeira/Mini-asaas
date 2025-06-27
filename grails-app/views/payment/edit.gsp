@@ -6,17 +6,19 @@
     <title>Editar Cobrança</title>
 </head>
 <body>
-    <div>
-        <form action="${createLink(action: "update", id: payment.id)}" method="post">
-            <p>Cliente: ${payment.customer.name}</p>
-            <p>Pagador: ${payment.payer.name}</p>
-            <p>Tipo de pagamento: ${payment.paymentType}</p>
-            <p>Valor: <input type="text" id="value" name="value" value="${payment.value}"></p>
-            <p>Data de vencimento: <input type="datetime-local" id="due_date" name="due_date" value="${payment.dueDate}"/></p>
-            <input type="submit" value="Editar Pagamento">
-        </form>
-        <p>-----------------------------------------------------------</p>
+    <g:form resource="${this.payment}" method="PUT">
+        <fieldset class="form">
+            <p>Valor: ${payment.value}</p>
+            <p>Tipo de Cobrança: ${payment.paymentType}</p>
+            <p>Quem vai pagar: ${payment.payer.name}</p>
+            <p>Nova data de vencimento:
+                <g:datePicker name="myDate" value="${payment.dueDate}" noSelection="['':'-Choose-']"/>
+            </p>
+        </fieldset>
+        <fieldset class="buttons">
+            <g:submitButton name="create" class="save" value="Confirmar" />
+        </fieldset>
+    </g:form>
         <a href="${createLink(action:"index")}">Voltar</a>
-    </div>
 </body>
 </html>

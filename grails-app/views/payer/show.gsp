@@ -2,13 +2,11 @@
 <html>
     <head>
         <meta name="layout" content="main" />
-        <g:set var="entityName" value="${message(code: 'customer.label', default: 'Customer')}" />
-        <title>
-            <g:message code="default.show.label" args="[entityName]" />
-        </title>
+        <g:set var="entityName" value="${message(code: 'payer.label', default: 'Payer')}" />
+        <title><g:message code="default.show.label" args="[entityName]" /></title>
     </head>
     <body>
-        <a href="#show-customer" class="skip" tabindex="-1">
+        <a href="#show-payer" class="skip" tabindex="-1">
             <g:message code="default.link.skip.label" default="Pular para o conteúdo"/>
         </a>
         <div class="nav" role="navigation">
@@ -30,20 +28,20 @@
                 </li>
             </ul>
         </div>
-        <div id="show-customer" class="content scaffold-show" role="main">
+        <div id="show-payer" class="content scaffold-show" role="main">
             <h1>
                 <g:message code="default.show.label" args="[entityName]" />
             </h1>
             <g:if test="${flash.message}">
                 <div class="message" role="status">${flash.message}</div>
             </g:if>
-            <f:display bean="customer" />
-            <g:form resource="${this.customer}" method="DELETE">
+            <f:display bean="payer" except="customer, deleted"/>
+            <g:form resource="${this.payer}" method="DELETE">
                 <fieldset class="buttons">
-                    <g:link class="edit" action="edit" resource="${this.customer}">
-                        <g:message code="default.button.edit.label" default="Edit" />
+                    <g:link class="edit" action="edit" resource="${this.payer}">
+                        <g:message code="default.button.edit.label" default="Editar" />
                     </g:link>
-                    <input class="delete" type="submit" value="${message(code: 'default.button.delete.label', default: 'Deletar')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Você tem certeza?')}');" />
+                    <input class="delete" type="submit" value="${message(code: 'default.button.delete.label', default: 'Remover')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Tem certeza?')}');" />
                 </fieldset>
             </g:form>
         </div>

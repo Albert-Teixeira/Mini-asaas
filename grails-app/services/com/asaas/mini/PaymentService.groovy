@@ -6,6 +6,12 @@ import grails.gorm.transactions.Transactional
 class PaymentService {
 
     Payment createPayment(Customer customer, Payer payer, PaymentType paymentType, Double value, Date dueDate) {
+
+        Date today = new Date()
+        if(dueDate.before(today)){
+            return null
+        }
+
         Payment payment = new Payment(
             customer: customer,
             payer: payer,
@@ -25,28 +31,10 @@ class PaymentService {
         return payment
     }
 
-    List<Payment> getPayments(Boolean deleted) {
-        if(deleted){
-            List<Payment> payments = Payment.findAllByDeleted(true)
-            return payments
-        }
-
-        List<Payment> payments = Payment.findAllByDeleted(false)
-
-        return payments
-    }
-
-    List<Payment> getPaymentsByCustomer(Customer customer) {
+    List<Payment> getPaymentsByCustomer(Customer customer, Boolean deleted=false) {
         List<Payment> payments = Payment.findAll {
+            deleted == deleted
             customer == customer
-        }
-
-        return payments
-    }
-
-    List<Payment> getPaymentsByPayer(Payer payer) {
-        List<Payment> payments = Payment.findAll {
-            payer == payer
         }
 
         return payments
@@ -61,7 +49,7 @@ class PaymentService {
         return payments
     }
 
-    Payment editPayment(Payment payment, Double value, Date dueDate) {
+    Payment editPayment(Payment payment, Date dueDate) {
 
         Date today = new Date()
         if(dueDate.before(today)){
@@ -69,8 +57,8 @@ class PaymentService {
         }
 
         try {
-            payment.value = value
             payment.dueDate = dueDate
+            payment.statusType = StatusType.PENDING
             payment.save(failOnError: true)
         } catch (Exception e) {
             println(e.getMessage())
@@ -96,29 +84,12 @@ class PaymentService {
         return true
     }
 
-    Payment restorePayment(Payment payment, Date dueDate = null) {
+    Payment restorePayment(Payment payment) {
         if(payment.deleted == false){
             return null
         }
 
-        if(payment.statusType == StatusType.RECEIVED){
-            return null
-        }
-
-        if(payment.statusType == StatusType.OVERDUE && !dueDate){
-            return null
-        }
-
-        Date today = new Date()
-        if(dueDate && dueDate.before(today)){
-            return null
-        }
-
         try {
-            payment.statusType = StatusType.PENDING
-            if(dueDate){
-                payment.dueDate = dueDate
-            }
             payment.deleted = false
         } catch(Exception e){
             println(e.getMessage())

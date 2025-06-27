@@ -4,11 +4,11 @@
         <meta name="layout" content="main" />
         <g:set var="entityName" value="${message(code: 'customer.label', default: 'Customer')}" />
         <title>
-            <g:message code="default.list.label" args="[entityName]" />
+            <g:message code="default.show.label" args="[entityName]" />
         </title>
     </head>
     <body>
-        <a href="#list-customer" class="skip" tabindex="-1">
+        <a href="#show-customer" class="skip" tabindex="-1">
             <g:message code="default.link.skip.label" default="Pular para o conteúdo"/>
         </a>
         <div class="nav" role="navigation">
@@ -19,24 +19,25 @@
                     </a>
                 </li>
                 <li>
-                    <g:link class="create" action="create">
-                        <g:message code="default.new.label" args="[entityName]" />
+                    <g:link class="list" controller="authentication" action="manage">
+                        Gerenciamento de usuários
                     </g:link>
                 </li>
             </ul>
         </div>
-        <div id="list-customer" class="content scaffold-list" role="main">
+        <div id="show-customer" class="content scaffold-show" role="main">
             <h1>
-                <g:message code="default.list.label" args="[entityName]" />
+                <g:message code="default.show.label" args="[entityName]" />
             </h1>
             <g:if test="${flash.message}">
                 <div class="message" role="status">${flash.message}</div>
             </g:if>
-            <f:table collection="${customerList}" />
-
-            <div class="pagination">
-                <g:paginate total="${customerCount ?: 0}" />
-            </div>
+            <f:display bean="customer" />
+            <fieldset class="buttons">
+                <g:link class="edit" action="edit">
+                    <g:message code="default.button.edit.label" default="Edit" />
+                </g:link>
+            </fieldset>
         </div>
     </body>
 </html>

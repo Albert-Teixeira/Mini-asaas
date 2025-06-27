@@ -1,26 +1,31 @@
 package com.asaas.mini
 
 import grails.converters.JSON
-
+import grails.plugin.springsecurity.annotation.Secured
 import java.text.SimpleDateFormat
 
+@Secured(['ROLE_USER','ROLE_OWNER'])
 class PaymentController {
 
     PaymentService paymentService
 
-    static allowedMethods = [index: "GET",
+    static allowedMethods = [
+        index: "GET",
         show: "GET",
         create: "GET",
         edit: "GET",
         save: "POST",
-        update: "POST",
-        remove: "GET",
-        restore: "GET",
-        confirm: "GET"]
+        update: "PUT",
+        remove: "DELETE",
+        restore: "PUT",
+        confirm: "PUT"]
 
     def index() {
+        User user = getAuthenticatedUser()
+        Customer customer = user.customer
+
         Boolean deleted = (params.deleted == "1")
-        List<Payment> paymentList = paymentService.getPayments(deleted)
+        List<Payment> paymentList = paymentService.getPaymentsByCustomer(customer,deleted)
 
         render(view: "index", model: [paymentList: paymentList, statusType: StatusType, deleted: deleted])
     }
@@ -32,9 +37,15 @@ class PaymentController {
             return
         }
 
+        User user = getAuthenticatedUser()
+        Customer customer = user.customer
+
         Integer id = Integer.parseInt(params.id)
 
-        Payment payment = Payment.get(params.id)
+        Payment payment = Payment.find {
+            id == id
+            customer == customer
+        }
 
         if(!payment){
             response.status = 404
@@ -46,27 +57,58 @@ class PaymentController {
     }
 
     def create() {
-        render(view: "create")
+        User user = getAuthenticatedUser()
+        Customer customer = user.customer
+        List<Payer> payerList = Payer.findAll {
+            customer == customer
+        }
+        
+        render(view: "create", model: [payment: new Payment(), payerList: payerList, paymentTypeList: PaymentType.values()])
     }
 
     def edit() {
-        def payment = Payment.get(params.id)
+        if(!params.id){
+            response.status = 400
+            render([erro: "O parâmetro id está faltando"] as JSON)
+            return
+        }
+        
+        User user = getAuthenticatedUser()
+        Customer customer = user.customer
+
+        Integer id = Integer.parseInt(params.id)
+
+        Payment payment = Payment.find {
+            id == id
+            customer == customer
+        }
+
+        if(!payment){
+            redirect(view: "index")
+            return
+        }
 
         render(view: "edit", model: [payment: payment])
     }
 
     def save() {
-
-        Integer customerId = Integer.parseInt(params.customer_id)
-        Integer payerId = Integer.parseInt(params.payer_id)
-        PaymentType paymentType = PaymentType.valueOf(params.payment_type)
+        Integer payerId = Integer.parseInt(params.payer)
+        PaymentType paymentType = PaymentType.valueOf(params.paymentType)
         Double value = Double.parseDouble(params.value)
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
-        Date dueDate = format.parse(params.due_date);
+        Calendar cal = Calendar.getInstance()
 
-        if(!customerId || !payerId || !paymentType || !value || !dueDate){
+        cal.set(
+            params.myDate_year as Integer,
+            params.myDate_month as Integer - 1,
+            params.myDate_day as Integer,
+            params.myDate_hour as Integer,
+            params.myDate_minute as Integer,
+            0)
+
+        Date dueDate = cal.getTime();
+
+        if(!payerId || !paymentType || !value || !dueDate){
             String errorMessage = "Faltam os parâmetros:"
-            if(!customerId) errorMessage += " customer_id"
             if(!payerId) errorMessage += " payer_id"
             if(!paymentType) errorMessage += " payment_type"
             if(!value) errorMessage += " value"
@@ -76,8 +118,18 @@ class PaymentController {
             render([erro: errorMessage] as JSON)
         }
 
-        Customer customer = Customer.get(customerId)
-        Payer payer = Payer.get(payerId)
+        User user = getAuthenticatedUser()
+        Customer customer = user.customer
+
+        Payer payer = Payer.find {
+            id == payerId
+            customer == customer
+        }
+
+        if(!payer){
+            response.status = 400
+            render([erro: "Não foi possível criar o pagamento"] as JSON)
+        }
 
         Payment payment = paymentService.createPayment(customer, payer, paymentType, value, dueDate)
 
@@ -97,12 +149,33 @@ class PaymentController {
         }
 
         Integer id = Integer.parseInt(params.id)
-        Double value = Double.parseDouble(params.value)
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm")
-        Date dueDate = format.parse(params.due_date)
+
+        Calendar cal = Calendar.getInstance()
+
+        cal.set(
+            params.myDate_year as Integer,
+            params.myDate_month as Integer - 1,
+            params.myDate_day as Integer,
+            params.myDate_hour as Integer,
+            params.myDate_minute as Integer,
+            0)
+
+        Date dueDate = cal.getTime();
         
-        Payment payment = Payment.get(params.id)
-        payment = paymentService.editPayment(payment, value, dueDate)
+        User user = getAuthenticatedUser()
+        Customer customer = user.customer
+
+        Payment payment = Payment.find {
+            id == id
+            customer == customer
+        }
+
+        if(!payment){
+            render([erro: "O pagamento não pôde ser editado"] as JSON)
+            return
+        }
+
+        payment = paymentService.editPayment(payment, dueDate)
 
         if(!payment){
             response.status = 400
@@ -118,8 +191,19 @@ class PaymentController {
             render([erro: "O parâmetro id está faltando"] as JSON)
         }
 
+        User user = getAuthenticatedUser()
+        Customer customer = user.customer
+
         Integer id = Integer.parseInt(params.id)
-        Payment payment = Payment.get(id)
+        Payment payment = Payment.find{
+            id == id
+            customer == customer
+        }
+
+        if(!payment){
+            render([erro: "O pagamento não pôde ser deletado"] as JSON)
+            return
+        }
 
         Boolean deleted = paymentService.deletePayment(payment)
 
@@ -137,17 +221,21 @@ class PaymentController {
             render([erro: "O parâmetro id está faltando"] as JSON)
         }
 
-        Integer id = Integer.parseInt(params.id)
-        Payment payment = Payment.get(id)
+        User user = getAuthenticatedUser()
+        Customer customer = user.customer
 
-        if(!params.due_date){
-            payment = paymentService.restorePayment(payment)
+        Integer id = Integer.parseInt(params.id)
+        Payment payment = Payment.find {
+            id == id
+            customer == customer
         }
-        else{
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
-            Date dueDate = format.parse(params.due_date);
-            payment = paymentService.restorePayment(payment,dueDate)
+
+        if(!payment){
+            render([erro: "O pagamento não pôde ser restaurado"] as JSON)
+            return
         }
+
+        payment = paymentService.restorePayment(payment)
 
         if(!payment){
             response.status = 400
@@ -163,8 +251,19 @@ class PaymentController {
             render([erro: "O parâmetro id está faltando"] as JSON)
         }
 
+        User user = getAuthenticatedUser()
+        Customer customer = user.customer
+
         Integer id = Integer.parseInt(params.id)
-        Payment payment = Payment.get(id)
+        Payment payment = Payment.find {
+            id == id
+            customer == customer
+        }
+
+        if(!payment){
+            render([erro: "O pagamento não pôde ser confirmado"] as JSON)
+            return
+        }
 
         Boolean confirmed = paymentService.confirmPayment(payment)
 
