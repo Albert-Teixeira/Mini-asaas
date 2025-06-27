@@ -42,7 +42,7 @@
             <g:form resource="${this.customer}" method="PUT">
                 <g:hiddenField name="version" value="${this.customer?.version}" />
                 <fieldset class="form">
-                    <f:all bean="customer"/>
+                    <f:all bean="customer" except="deleted"/>
                 </fieldset>
                 <fieldset class="buttons">
                     <input class="save" type="submit" value="${message(code: 'default.button.update.label', default: 'Atualizar')}" />
