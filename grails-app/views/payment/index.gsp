@@ -35,7 +35,7 @@
                 </g:elseif>
                 <g:else>
                     <a href="${createLink(action:"show",id:"${payment.id}")}">Acessar pagamento</a><br><br>
-                    <a href="${createLink(action:"edit",id:"${payment.id}")}">Nova data de vencimento</a>
+                    <a href="${createLink(action:"edit",id:"${payment.id}")}">Alterar data de vencimento</a>
 
                     <g:form action="remove" method="DELETE" id="${payment.id}">
                         <fieldset class="buttons">
