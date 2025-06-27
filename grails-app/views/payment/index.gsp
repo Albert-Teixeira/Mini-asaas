@@ -33,7 +33,15 @@
                 <g:else>
                     <a href="${createLink(action:"show",id:"${payment.id}")}">Acessar pagamento</a>
                     <a href="${createLink(action:"edit",id:"${payment.id}")}">Editar pagamento</a>
-                    <a href="${createLink(action:"remove",id:"${payment.id}")}">Deletar Pagamento</a>
+
+                    <%-- <a href="${createLink(action:"remove",id:"${payment.id}")}">Deletar Pagamento</a> --%>
+
+                    <g:form action="remove" method="delete" id="${payment.id}">
+                        <fieldset class="buttons">
+                            <input class="delete" type="submit" value="${message(code: 'default.button.delete.label', default: 'Remover')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Tem certeza?')}');" />
+                        </fieldset>
+                    </g:form>
+
                     <a href="${createLink(action:"confirm",id:"${payment.id}")}">Receber Pagamento</a>
                 </g:else>
                 <p>-----------------------------------------------------------</p>
