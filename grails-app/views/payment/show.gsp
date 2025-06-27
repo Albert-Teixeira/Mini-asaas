@@ -13,8 +13,7 @@
         <p>Status: ${payment.statusType}</p>
         <g:if test="${ payment.statusType == statusType.RECEIVED }"> <p>Data de recebimento: ${payment.dateReceived}</p> </g:if>
         <p>Data de vencimento: ${payment.dueDate}</p>
-        <p>-----------------------------------------------------------</p>
-        
+
         <g:if test="${ payment.statusType != statusType.RECEIVED }">      
             <fieldset class="buttons">
                 <g:if test="${ payment.deleted }">
